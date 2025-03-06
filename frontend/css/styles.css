@@ -1,0 +1,39 @@
+.btn {
+    padding: 3px 20px; /* Shorter height */
+    border-radius: 20px; /* Larger radius */
+}
+
+.font-size {
+    font-size: 1.3rem;
+}
+
+.img-fixed {
+    width: 90%; /* Makes images responsive */
+    /*height: 100%;*/
+    max-height: 255px; /* Set a uniform height */
+    object-fit: cover; /* Ensures images maintain aspect ratio */
+}
+
+.Image {
+    transition: transform 0.3s ease-in-out;
+}
+
+.Image:hover {
+    transform: scale(1.05);
+}
+
+.myCard {
+    transition: transform 0.3s ease-in-out;
+}
+
+.myCard:hover {
+    transform: scale(1.05);
+}
+
+li {
+    margin-right: 10px;
+}
+
+.Link:hover {
+    text-decoration: underline;
+}
