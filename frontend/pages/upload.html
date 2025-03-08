@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Upload and Tracking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+        
+        .tracking-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .tracking-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            min-width: 120px;
+            margin-bottom: 15px;
+        }
+        
+        .tracking-step:not(:last-child):after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            width: 100%;
+            height: 3px;
+            background-color: #dee2e6;
+            z-index: 1;
+        }
+        
+        .tracking-step.active:not(:last-child):after {
+            background-color: #0d6efd;
+        }
+        
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .tracking-step.active .step-icon {
+            background-color: #0d6efd;
+            color: white;
+        }
+        
+        .modal-tracking-status {
+            margin-top: 20px;
+            border-top: 1px solid #dee2e6;
+            padding-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .tracking-step {
+                min-width: 80px;
+                font-size: 0.85rem;
+            }
+            
+            .step-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .list-group-item {
+                flex-direction: column;
+                align-items: flex-start !important;
+            }
+            
+            .list-group-item > div, 
+            .list-group-item > button {
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .tracking-progress {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .tracking-step {
+                width: 100%;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                text-align: left;
+            }
+            
+            .step-icon {
+                margin: 0 15px 0 0;
+            }
+            
+            .tracking-step:not(:last-child):after {
+                top: 100%;
+                left: 25px;
+                width: 3px;
+                height: 20px;
+            }
+        }
+        
+        /* Modal responsiveness */
+        .modal-custom {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1050;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-content-custom {
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            max-width: 90%;
+            width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        /* Device list responsiveness */
+        .device-info {
+            overflow-wrap: break-word;
+            word-break: break-word;
+            max-width: 100%;
+        }
+        
+        /* Custom navbar styles */
+        .nav-auth-buttons {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark px-3">
+    <!-- brand -->
+    <a class="navbar-brand fw-bold" style="color: var(--bs-primary);" href="#">E-Receiver</a>
+    <a class="navbar-brand d-none d-md-block">&VerticalLine;</a>
+
+    <!-- navbar toggler button now moved to the right side with margin -->
+    <button class="navbar-toggler ms-2 order-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- links now only show in the hamburger menu on mobile -->
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item"><a class="nav-link font-size active Link" href="#">Home</a></li>
+            <li class="nav-item"><a class="nav-link font-size Link" href="#">About</a></li>
+            <li class="nav-item"><a class="nav-link font-size Link" href="#">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- Auth buttons that stay visible on all screen sizes -->
+    <div class="nav-auth-buttons ms-auto">
+        <a href="#" class="btn btn-primary me-2 fw-bold">Login</a>
+        <a href="#" class="btn btn-outline-primary fw-bold me-2">Register</a>
+    </div>
+</nav>
+
+<!-- Upload Form -->
+<div class="container mt-5">
+    <h2 class="fw-bold text-center text-primary">Upload Your Device</h2>
+    <form id="uploadForm" class="p-3 p-md-4 shadow-sm rounded bg-light">
+        <div class="mb-3">
+            <input type="text" class="form-control" id="deviceName" placeholder="Device Name" required>
+        </div>
+        <div class="mb-3">
+            <input type="text" class="form-control" id="deviceType" placeholder="Device Type" required>
+        </div>
+        <div class="mb-3">
+            <textarea class="form-control" id="deviceDescription" placeholder="Device Description" rows="3" required></textarea>
+        </div>
+        <div class="mb-3">
+            <input type="file" class="form-control" id="deviceImage" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Submit for Evaluation</button>
+    </form>
+</div>
+
+<!-- Devices List with Status -->
+<div class="container mt-5 mb-5">
+    <h2 class="fw-bold text-center">Uploaded Devices</h2>
+    <ul id="deviceList" class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+            <span class="device-info">iPhone 12 - <strong>Excellent</strong> (Waiting for Courier)</span>
+            <button class="btn btn-outline-primary btn-sm track-btn mt-2 mt-md-0">Track</button>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+            <span class="device-info">Samsung Galaxy S21 - <strong>Good</strong> (Collected by Courier)</span>
+            <button class="btn btn-outline-primary btn-sm track-btn mt-2 mt-md-0">Track</button>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+            <span class="device-info">MacBook Pro - <strong>Fair</strong> (Evaluated)</span>
+            <div class="mt-2 mt-md-0">
+                <button class="btn btn-success btn-sm accept-btn">Accept</button>
+                <button class="btn btn-danger btn-sm reject-btn">Reject</button>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Function to calculate estimated price based on device info
+    function calculateEstimatedPrice(deviceInfo) {
+        // Extract device name from the info string
+        const deviceName = deviceInfo.split(' - ')[0].toLowerCase();
+        
+        // Set prices based on device type
+        if (deviceName.includes('iphone')) {
+            return 250;
+        } else if (deviceName.includes('samsung')) {
+            return 200;
+        } else if (deviceName.includes('macbook')) {
+            return 450;
+        } else {
+            // Default price for unknown devices
+            return 100;
+        }
+    }
+
+    // Function to show price modal
+    function showPriceModal(deviceInfo, price) {
+        // Create modal elements
+        const modalOverlay = document.createElement('div');
+        modalOverlay.className = 'modal-custom';
+        
+        const modalContent = document.createElement('div');
+        modalContent.className = 'modal-content-custom shadow';
+        modalContent.innerHTML = `
+            <h4 class="text-primary mb-3">Estimated Price</h4>
+            <p>Your ${deviceInfo} has an estimated value of <strong>$${price}</strong></p>
+            <p class="text-muted small">Please note this is an estimated value and may change after physical inspection.</p>
+            <div class="text-end mt-4">
+                <button class="btn btn-primary confirm-btn">Continue</button>
+            </div>
+        `;
+        
+        modalOverlay.appendChild(modalContent);
+        document.body.appendChild(modalOverlay);
+        
+        // Add event listener to close the modal and update status
+        modalContent.querySelector('.confirm-btn').addEventListener('click', function() {
+            modalOverlay.remove();
+        });
+        
+        // Close modal when clicking outside
+        modalOverlay.addEventListener('click', function(event) {
+            if (event.target === modalOverlay) {
+                modalOverlay.remove();
+            }
+        });
+    }
+
+    // Function to show tracking modal
+    function showTrackingModal(deviceInfo, status) {
+        // Determine which steps are active based on status
+        let waitingActive = true;
+        let collectedActive = status.includes('Collected') || status.includes('Evaluated') || status.includes('Accepted');
+        let evaluatedActive = status.includes('Evaluated') || status.includes('Accepted');
+        let acceptedActive = status.includes('Accepted');
+        
+        // Create modal elements
+        const modalOverlay = document.createElement('div');
+        modalOverlay.className = 'modal-custom';
+        
+        const modalContent = document.createElement('div');
+        modalContent.className = 'modal-content-custom shadow';
+        modalContent.innerHTML = `
+            <h4 class="text-primary mb-3">Track Your Device</h4>
+            <p class="device-info">${deviceInfo}</p>
+            
+            <div class="tracking-progress">
+                <div class="tracking-step ${waitingActive ? 'active' : ''}">
+                    <div class="step-icon">1</div>
+                    <div>Waiting for Courier</div>
+                </div>
+                <div class="tracking-step ${collectedActive ? 'active' : ''}">
+                    <div class="step-icon">2</div>
+                    <div>Collected</div>
+                </div>
+                <div class="tracking-step ${evaluatedActive ? 'active' : ''}">
+                    <div class="step-icon">3</div>
+                    <div>Evaluated</div>
+                </div>
+                <div class="tracking-step ${acceptedActive ? 'active' : ''}">
+                    <div class="step-icon">4</div>
+                    <div>Complete</div>
+                </div>
+            </div>
+            
+            <div class="modal-tracking-status">
+                <h5>Current Status:</h5>
+                <p class="fw-bold">${status}</p>
+                <p class="text-muted small">Last updated: ${new Date().toLocaleString()}</p>
+            </div>
+            
+            <div class="text-end mt-4">
+                <button class="btn btn-secondary close-btn">Close</button>
+            </div>
+        `;
+        
+        modalOverlay.appendChild(modalContent);
+        document.body.appendChild(modalOverlay);
+        
+        // Add event listener to close the modal
+        modalContent.querySelector('.close-btn').addEventListener('click', function() {
+            modalOverlay.remove();
+        });
+        
+        // Close modal when clicking outside
+        modalOverlay.addEventListener('click', function(event) {
+            if (event.target === modalOverlay) {
+                modalOverlay.remove();
+            }
+        });
+    }
+
+    // Event listener for form submission
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const deviceName = document.getElementById('deviceName').value;
+        const deviceType = document.getElementById('deviceType').value;
+        const deviceDescription = document.getElementById('deviceDescription').value;
+        const deviceList = document.getElementById('deviceList');
+
+        const listItem = document.createElement('li');
+        listItem.className = 'list-group-item d-flex justify-content-between align-items-center flex-wrap';
+        listItem.innerHTML = `
+                <span class="device-info">${deviceName} (Waiting for Courier)</span>
+                <button class="btn btn-outline-primary btn-sm track-btn mt-2 mt-md-0">Track</button>
+            `;
+        deviceList.appendChild(listItem);
+
+        // Reset form
+        document.getElementById('uploadForm').reset();
+
+        // Simulate status changes with timeouts
+        setTimeout(() => {
+            listItem.innerHTML = `
+                    <span class="device-info">${deviceName} (Collected by Courier)</span>
+                    <button class="btn btn-outline-primary btn-sm track-btn mt-2 mt-md-0">Track</button>
+                `;
+        }, 5000);
+
+        setTimeout(() => {
+            listItem.innerHTML = `
+                    <span class="device-info">${deviceName} (Evaluated)</span>
+                    <div class="mt-2 mt-md-0">
+                        <button class="btn btn-success btn-sm accept-btn">Accept</button>
+                        <button class="btn btn-danger btn-sm reject-btn">Reject</button>
+                    </div>
+                `;
+        }, 10000);
+    });
+
+ // Event listener for accept/reject buttons and track button
+document.getElementById('deviceList').addEventListener('click', function(event) {
+    if (event.target.classList.contains('accept-btn')) {
+        // Get the device info from the list item
+        const listItem = event.target.closest('li');
+        const deviceInfo = listItem.querySelector('span').textContent;
+        
+        // Calculate the estimated price
+        const price = calculateEstimatedPrice(deviceInfo);
+        
+        // Show the price modal
+        showPriceModal(deviceInfo, price);
+        
+        // Update the list item to show "Accepted" status after modal is shown
+        setTimeout(() => {
+            listItem.innerHTML = `
+                <span class="device-info">${deviceInfo.split(' (')[0]} (Accepted)</span>
+                <button class="btn btn-outline-primary btn-sm track-btn mt-2 mt-md-0">Track History</button>
+            `;
+        }, 100);
+    } else if (event.target.classList.contains('reject-btn')) {
+        const listItem = event.target.closest('li');
+        const deviceInfo = listItem.querySelector('span').textContent;
+        listItem.innerHTML = `
+            <span class="device-info">${deviceInfo.split(' (')[0]} (Rejected)</span>
+        `;
+    } else if (event.target.classList.contains('track-btn')) {
+        const listItem = event.target.closest('li');
+        const deviceInfo = listItem.querySelector('span').textContent;
+        const status = deviceInfo.match(/\(([^)]+)\)/)[1];
+        
+        // Show tracking modal
+        showTrackingModal(deviceInfo, status);
+    }
+});
+</script>
+</body>
+</html>
