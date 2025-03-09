@@ -1,1 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Settings</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: serif;
+      background-color: #fff;
+      color: #333;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .main-header {
+      font-size: 36px;
+      color: #333;
+      margin-bottom: 30px;
+      font-weight: normal;
+    }
+    .tab-header {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 40px;
+    }
+    .tab {
+      padding: 15px 0;
+      margin-right: 40px;
+      cursor: pointer;
+      color: #555;
+      font-size: 18px;
+      position: relative;
+    }
+    .tab.active {
+      color: #333;
+      font-weight: normal;
+    }
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: #333;
+    }
+    .section-title {
+      font-size: 28px;
+      margin-bottom: 15px;
+      color: #333;
+      font-weight: normal;
+    }
+    .section-subtitle {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 25px;
+    }
+    .form-label {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .form-control {
+      width: 100%;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 0;
+      font-size: 16px;
+      height: 46px;
+    }
+    .divider {
+      height: 1px;
+      background-color: #ddd;
+      margin: 30px 0;
+      width: 100%;
+    }
+    .profile-image {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-top: 10px;
+      display: block;
+      background-color: #f5f5f5;
+      border: 1px solid #eaeaea;
+    }
+    .empty-placeholder {
+      background-color: #f5f5f5;
+      border: 1px solid #eaeaea;
+    }
+    .profile-placeholder {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+    }
+    .info-icon {
+      display: inline-flex;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #ddd;
+      color: #555;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin-left: 5px;
+      font-style: italic;
+    }
+    .globe-icon {
+      display: inline-flex;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: transparent;
+      border: 1px solid #ccc;
+      color: #555;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .input-group {
+      display: flex;
+      width: 100%;
+    }
+    .input-group .form-control {
+      flex: 1;
+      border-right: none;
+    }
+    .input-group-text {
+      background-color: white;
+      border: 1px solid #ccc;
+      border-left: none;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+    }
+    .btn-update {
+      background-color: #444;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .btn-discard {
+      background-color: white;
+      color: #333;
+      border: 1px solid #ccc;
+      padding: 8px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .buttons-container {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .required {
+      color: #333;
+    }
+    .dropdown-arrow {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 25px;
+    }
+    .select-wrapper {
+      position: relative;
+    }
+    /* New styles for image upload */
+    .profile-image-container {
+      position: relative;
+      width: 100px;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .profile-image-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+      cursor: pointer;
+    }
+    .profile-image-container:hover .profile-image-overlay {
+      opacity: 1;
+    }
+    .profile-image-overlay-icon {
+      color: white;
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    .profile-image-overlay-text {
+      color: white;
+      font-size: 12px;
+      text-align: center;
+    }
+    .image-upload-input {
+      display: none;
+    }
+    .image-actions {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+    .btn-image-action {
+      font-size: 14px;
+      padding: 5px 15px;
+      border: 1px solid #ccc;
+      background-color: white;
+      color: #333;
+      cursor: pointer;
+      min-width: 80px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1 class="main-header">Account Settings</h1>
 
+  <div class="tab-header">
+    <div class="tab active">My Account</div>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="section-title mb-0">Account</div>
+    <div class="buttons-container mb-0">
+      <button class="btn-discard">Discard</button>
+      <button class="btn-update">Update Info</button>
+    </div>
+  </div>
+  <div class="section-subtitle">View and edit your personal info below.</div>
+
+  <div class="divider"></div>
+
+  <div class="section-title">Display info</div>
+  <p>This information will be visible to all members of this site.</p>
+
+  <div class="row mt-4">
+    <div class="col-md-8">
+      <div class="form-group">
+        <label class="form-label">Display name <span class="required">*</span></label>
+        <input type="text" class="form-control" value="ahmedxcv1251">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Title</label>
+        <input type="text" class="form-control">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Profile image <span class="info-icon">i</span></label>
+      <div id="profileImageContainer" class="profile-image-container">
+        <div id="emptyProfilePlaceholder" class="profile-image empty-placeholder"></div>
+        <img src="" alt="" class="profile-image" id="profileImage" style="display: none;">
+        <label for="imageUpload" class="profile-image-overlay">
+          <span class="profile-image-overlay-icon">📷</span>
+          <span class="profile-image-overlay-text">Change Photo</span>
+        </label>
+        <input type="file" id="imageUpload" class="image-upload-input" accept="image/*">
+      </div>
+      <div class="image-actions">
+        <button class="btn-image-action" id="uploadBtn">Upload</button>
+        <button class="btn-image-action" id="removeBtn">Remove</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-title">Personal info</div>
+  <p>Update your personal information.</p>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label">First name</label>
+        <div class="input-group">
+          <input type="text" class="form-control" value="Ahmed">
+          <div class="input-group-text">
+            <span class="globe-icon">⊕</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label">Last name</label>
+        <div class="input-group">
+          <input type="text" class="form-control" value="Salah">
+          <div class="input-group-text">
+            <span class="globe-icon">⊕</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label">Role</label>
+        <div class="input-group">
+          <input type="text" class="form-control" value="Administrator">
+          <div class="input-group-text">
+            <span class="globe-icon">⊕</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <div class="input-group">
+          <input type="text" class="form-control" value="01146261305">
+          <div class="input-group-text">
+            <span class="globe-icon">⊕</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Address <span class="globe-icon">⊕</span></label>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label">Street</label>
+        <input type="text" class="form-control" value="Altalbia Faisal, Giza governorate">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label">Street line 2</label>
+        <input type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label">City</label>
+        <input type="text" class="form-control">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label">Zipcode</label>
+        <input type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Country</label>
+    <div class="select-wrapper">
+      <select class="form-control">
+        <option value="">Select a country</option>
+        <option value="egypt">Egypt</option>
+        <option value="usa">United States</option>
+        <option value="uk">United Kingdom</option>
+      </select>
+      <span class="dropdown-arrow">▼</span>
+    </div>
+  </div>
+
+  <div class="buttons-container">
+    <button class="btn-discard">Discard</button>
+    <button class="btn-update">Update Info</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Profile image functionality
+  const imageUpload = document.getElementById('imageUpload');
+  const profileImage = document.getElementById('profileImage');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const removeBtn = document.getElementById('removeBtn');
+  const emptyProfilePlaceholder = document.getElementById('emptyProfilePlaceholder');
+
+  // Handle file input change
+  imageUpload.addEventListener('change', function(event) {
+    if (event.target.files && event.target.files[0]) {
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        profileImage.src = e.target.result;
+        profileImage.style.display = 'block';
+        emptyProfilePlaceholder.style.display = 'none';
+      }
+
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  });
+
+  // Upload button click - trigger file input
+  uploadBtn.addEventListener('click', function() {
+    imageUpload.click();
+  });
+
+  // Remove button click - reset to default image
+  removeBtn.addEventListener('click', function() {
+    profileImage.src = '';
+    profileImage.style.display = 'none';
+    emptyProfilePlaceholder.style.display = 'block';
+    imageUpload.value = '';
+  });
+</script>
+</body>
+</html>
