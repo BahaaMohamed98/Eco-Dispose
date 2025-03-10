@@ -1,16 +1,29 @@
-# E-Waste Management Project
+# vue-e-waste
 
-## 📌 Project Overview
-A simple web-based system where users can list electronic devices they want to recycle or sell.
+This template should help get you started developing with Vue 3 in Vite.
 
-## 📂 Project Structure
+## Recommended IDE Setup
 
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+
+## Customize configuration
+
+See [Vite Configuration Reference](https://vite.dev/config/).
+
+## Project Setup
+
+```sh
+npm install
 ```
-E-Waste/
-│── /assets       # For images, fonts, etc.
-│── /css          # Stylesheets
-│── /js           # JavaScript files
-│── /pages        # Separate pages (HTML files)
-│── index.html    # Main landing page
-│── README.md     # This README page
+
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+```
+
+### Compile and Minify for Production
+
+```sh
+npm run build
 ```

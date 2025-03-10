@@ -1,6 +1,7 @@
 .btn {
     padding: 3px 20px; /* Shorter height */
     border-radius: 20px; /* Larger radius */
+    font-weight: bold;
 }
 
 .font-size {
