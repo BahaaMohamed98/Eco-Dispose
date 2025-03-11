@@ -19,7 +19,7 @@ function submitForm() {
       street: "",
       city: "",
       country: "",
-      zip: NaN,
+      zip: "",
     },
   });
 
@@ -112,7 +112,7 @@ const isFormInvalid = computed(
           </div>
           <div class="container text-center">
             <button
-              @clickprevent="submitForm"
+              @click.prevent="submitForm"
               type="submit"
               class="btn btn-primary mt-3 rounded-pill"
               :disabled="isFormInvalid"
