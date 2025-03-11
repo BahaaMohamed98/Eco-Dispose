@@ -59,7 +59,7 @@ export const devicesStore = reactive({
   },
 
   getDeviceImage(device) {
-    return device.image || "/src/assets/devices/device.png";
+    return device.image || "/assets/devices/device.png";
   },
 
   updateDeviceStatus(deviceId, status) {
