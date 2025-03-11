@@ -24,18 +24,22 @@ const isFormInvalid = computed(() => !email.value || !password.value);
 </script>
 
 <template>
-  <div class="row">
-    <div class="col-lg">
-      <img
-        src="@/assets/computerchip1.jpeg"
-        alt="responsive image"
-        style="height: auto; width: 100%; border-radius: 10px; margin: 10px"
-      />
+  <div class="row flex-grow-1 m-0">
+    <div
+      class="col-lg"
+      style="
+        background: url(/assets/computerchip1.jpeg) no-repeat center center;
+        background-size: cover;
+      "
+    >
     </div>
 
-    <div class="col">
+    <div class="col-sm">
       <form class="p-3">
-        <h1 style="color: var(--bs-primary)" class="fw-bold text-center mb-4">
+        <h1
+          class="fw-bold text-center text-primary"
+          style="margin-bottom: 80px"
+        >
           Sign In
         </h1>
         <div class="mb-3">
@@ -49,9 +53,10 @@ const isFormInvalid = computed(() => !email.value || !password.value);
             placeholder="Email address"
             aria-describedby="emailHelp"
             autofocus
+            autocomplete="username"
           />
-          <div class="form-text ps-3 mb-3"
-            >we'll never share your email with anyone.
+          <div class="form-text ps-3 mb-3">
+            we'll never share your email with anyone.
           </div>
         </div>
         <div class="mb-3">
@@ -63,6 +68,7 @@ const isFormInvalid = computed(() => !email.value || !password.value);
             type="password"
             class="form-control rounded-pill"
             placeholder="Password"
+            autocomplete="current-password"
           />
         </div>
         <button
@@ -88,16 +94,16 @@ const isFormInvalid = computed(() => !email.value || !password.value);
             <span class="or-text">OR</span>
             <hr class="right-line" />
           </div>
-          <p
-            >Don't have an account?
+          <p>
+            Don't have an account?
             <router-link to="/register" style="text-decoration: none"
               >sign up
             </router-link>
           </p>
-          <p
-            >By creating an account, you agree to the Terms of use and Privacy
-            Policy.</p
-          >
+          <p>
+            By creating an account, you agree to the Terms of use and Privacy
+            Policy.
+          </p>
           <hr />
         </div>
       </div>

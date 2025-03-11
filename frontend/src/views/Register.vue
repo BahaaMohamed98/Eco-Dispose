@@ -1,13 +1,12 @@
 <script setup>
 import { store } from "@/store/store.js";
 import router from "@/router/routes.js";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 const firstName = ref("");
 const lastName = ref("");
 const email = ref("");
 const password = ref("");
-const address = ref("");
 
 function submitForm() {
   const response = store.register({
@@ -17,38 +16,34 @@ function submitForm() {
     password: password.value,
     phoneNumber: "",
     address: {
-      street: address.value,
-      city: address.value,
+      street: "",
+      city: "",
       country: "",
       zip: NaN,
     },
   });
 
   if (response.ok) {
-    router.push({ path: "/profile" });
+    router.push({ path: "/profile/edit" });
   }
 }
+
+const isFormInvalid = computed(
+  () => !firstName.value || !lastName.value || !email.value || !password.value,
+);
 </script>
 
 <template>
-  <div class="row">
+  <div class="row flex-grow-1 m-0">
     <div class="col">
       <div class="container p-4">
         <form>
-          <h1 class="fw-bold text-center mb-4" style="color: var(--bs-primary)">
+          <h1
+            class="fw-bold text-center text-primary"
+            style="margin-bottom: 80px"
+          >
             Welcome to Eco-Dispose
           </h1>
-          <div class="mb-3">
-            <label for="email" class="form-label fw-bold">Email</label>
-            <input
-              v-model="email"
-              type="email"
-              class="form-control rounded-pill"
-              id="email"
-              placeholder="Email address"
-              autofocus
-            />
-          </div>
           <div class="mb-3 row">
             <div class="col-md-6">
               <label for="firstName" class="form-label fw-bold"
@@ -60,6 +55,7 @@ function submitForm() {
                 class="form-control rounded-pill"
                 id="firstName"
                 placeholder="First Name"
+                autofocus
               />
             </div>
             <div class="col-md-6">
@@ -74,13 +70,13 @@ function submitForm() {
             </div>
           </div>
           <div class="mb-3">
-            <label for="address" class="form-label fw-bold">Address</label>
+            <label for="email" class="form-label fw-bold">Email</label>
             <input
-              v-model="address"
-              type="text"
+              v-model="email"
+              type="email"
               class="form-control rounded-pill"
-              id="address"
-              placeholder="Address"
+              id="email"
+              placeholder="Email address"
             />
           </div>
           <div class="mb-3">
@@ -92,6 +88,7 @@ function submitForm() {
                 class="form-control rounded-pill"
                 id="password"
                 placeholder="Password"
+                autocomplete="password"
               />
             </div>
           </div>
@@ -108,16 +105,17 @@ function submitForm() {
               I want to receive emails about the product, events, and marketing
               promotions.
             </label>
+            <p class="mt-3">
+              By creating an account, you agree to the Terms of use and Privacy
+              Policy.
+            </p>
           </div>
-          <p>
-            By creating an account, you agree to the Terms of use and Privacy
-            Policy.
-          </p>
           <div class="container text-center">
             <button
-              @click.prevent="submitForm"
+              @clickprevent="submitForm"
               type="submit"
-              class="btn btn-primary rounded-pill"
+              class="btn btn-primary mt-3 rounded-pill"
+              :disabled="isFormInvalid"
             >
               <i class="fa-solid fa-user-plus"></i> Create an account
             </button>
@@ -131,13 +129,13 @@ function submitForm() {
         </form>
       </div>
     </div>
-    <div class="col-lg">
-      <img
-        src="@/assets/computerchip2.jpeg"
-        alt="responsive image"
-        style="height: auto; width: 100%; border-radius: 10px; margin: 10px"
-      />
-    </div>
+    <div
+      class="col-lg"
+      style="
+        background: url(/assets/computerchip2.jpeg) no-repeat center center;
+        background-size: cover;
+      "
+    ></div>
   </div>
 </template>
 
