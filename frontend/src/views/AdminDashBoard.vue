@@ -140,15 +140,6 @@ function refreshDevices() {
 }
 
 // Helper methods
-function getUserInitials(name) {
-  if (!name) return "U";
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
-}
-
 function getStatusBadgeClass(status) {
   const badgeMap = {
     waiting: "bg-primary",
@@ -320,27 +311,14 @@ function closeToast(toastId) {
             <!-- Device Image -->
             <div class="card-img-container">
               <img
-                :src="
-                  device.image ||
-                  'https://via.placeholder.com/300x200?text=No+Image'
-                "
+                :src="devicesStore.getDeviceImage(device)"
                 :alt="device.name"
                 class="device-image"
               />
             </div>
 
             <!-- Card Body with Device Details -->
-            <div class="card-body">
-              <!-- Device Condition Badge -->
-              <div class="mb-3">
-                <span
-                  class="condition-badge"
-                  :class="getConditionClass(device.condition)"
-                >
-                  {{ device.condition }}
-                </span>
-              </div>
-
+            <div class="card-body d-flex flex-column">
               <!-- Device Specifications -->
               <div class="device-specs mt-3" v-if="device.specs">
                 <h5 class="fw-bold mb-3">Specifications</h5>
@@ -354,21 +332,49 @@ function closeToast(toastId) {
                 </div>
               </div>
 
-              <!-- Notes Section -->
-              <div class="mt-4">
-                <label class="form-label fw-bold">Evaluation Notes</label>
-                <textarea
-                  class="form-control"
-                  v-model="device.notes"
-                  rows="3"
-                  placeholder="Add notes about the device evaluation..."
-                  :disabled="
-                    device.status === 'evaluated' ||
-                    device.status === 'accepted'
-                  "
-                  @change="updateDeviceNotes(device.id, device.notes)"
-                ></textarea>
+              <div class="description-notes-container">
+                <!-- User Description Section -->
+                <div class="my-3">
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-2"
+                  >
+                    <label class="form-label fw-bold mb-0">
+                      <i class="fas fa-comment-alt me-2 text-primary"></i>User
+                      Description
+                    </label>
+                  </div>
+                  <div class="user-description p-3 bg-light border rounded">
+                    <p class="mb-0 text-muted">
+                      {{ device.description || "No description provided" }}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-2"
+                  >
+                    <label class="form-label fw-bold mb-0">
+                      <i class="fas fa-clipboard-check me-2 text-primary"></i
+                      >Admin Notes
+                    </label>
+                  </div>
+                  <textarea
+                    class="form-control"
+                    v-model="device.notes"
+                    rows="3"
+                    placeholder="Add your evaluation notes about this device..."
+                    :disabled="
+                      device.status === 'evaluated' ||
+                      device.status === 'accepted'
+                    "
+                    @change="updateDeviceNotes(device.id, device.notes)"
+                  ></textarea>
+                </div>
               </div>
+
+              <!-- Spacer to push the rest to the bottom -->
+              <div class="flex-grow-1"></div>
 
               <!-- Price Offer Section -->
               <div class="mt-3">
@@ -408,7 +414,7 @@ function closeToast(toastId) {
                 </div>
               </div>
 
-              <!-- Device Condition (Admin sets this) -->
+              <!-- Device Condition -->
               <div
                 class="mt-3"
                 v-if="
@@ -710,5 +716,44 @@ function closeToast(toastId) {
   .filter-bar {
     padding: 1rem;
   }
+}
+
+.device-card {
+  height: 100%; /* Make all cards same height */
+  display: flex;
+  flex-direction: column;
+}
+
+.device-card-body {
+  flex: 1 1 auto; /* Allow flexible height */
+  display: flex;
+  flex-direction: column;
+}
+
+.user-description {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 0.5rem;
+  font-style: italic;
+}
+
+.condition-excellent {
+  background-color: #28a745;
+  color: white;
+}
+
+.condition-good {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.condition-fair {
+  background-color: #ffc107;
+  color: #343a40;
+}
+
+.condition-poor {
+  background-color: #dc3545;
+  color: white;
 }
 </style>

@@ -9,11 +9,8 @@ const router = useRouter();
 const deviceForm = reactive({
   name: "",
   type: "",
-  condition: "Good",
   description: "",
   images: [],
-  age: "",
-  workingStatus: "Fully Working",
   defects: "",
 });
 
@@ -90,25 +87,23 @@ const submitDevice = async () => {
     // Add to store
     devicesStore.devices[newDeviceId] = {
       name: deviceForm.name,
-      condition: deviceForm.condition,
+      condition: "",
       estimatedPrice: null, // Will be set after evaluation
       status: "waiting",
       specs: {
         Type: deviceForm.type,
         "Added On": new Date().toLocaleDateString(),
-        // Replace specific specs with general ones
-        Age: deviceForm.age || "Not specified",
-        "Working Status": deviceForm.workingStatus,
         "Known Defects": deviceForm.defects || "None reported",
       },
       image: imagePreview.value[0], // Use first image as the main image
-      notes: deviceForm.description,
+      description: deviceForm.description,
     };
 
     // Redirect with a success message
     await router.push("/list");
   } catch (error) {
     errors.value.submit = "Failed to submit device. Please try again.";
+    console.error(error);
   } finally {
     isSubmitting.value = false;
   }
@@ -137,8 +132,10 @@ const removeImage = (index) => {
       </div>
     </div>
 
-    <!-- Upload Form with enhanced design -->
     <div class="container mb-5">
+      <h2 class="fw-bold text-center text-primary mb-4 section-header">
+        Device Details
+      </h2>
       <div class="row justify-content-center">
         <div class="col-lg-8">
           <form
@@ -179,57 +176,9 @@ const removeImage = (index) => {
               </label>
             </div>
 
-            <!-- Condition field -->
-            <div class="mb-4">
-              <label class="form-label fw-bold">
-                <i class="fas fa-star-half-alt me-2"></i>Condition
-              </label>
-              <select v-model="deviceForm.condition" class="form-select">
-                <option value="Excellent">Excellent</option>
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Poor">Poor</option>
-              </select>
-            </div>
-
-            <!-- Replace the entire device specifications section -->
             <h5 class="mt-4 mb-3">Device Details</h5>
 
             <div class="row g-3 mb-4">
-              <!-- Age -->
-              <div class="col-md-6">
-                <div class="form-floating">
-                  <input
-                    v-model="deviceForm.age"
-                    type="text"
-                    class="form-control"
-                    id="deviceAge"
-                    placeholder="Device Age"
-                  />
-                  <label for="deviceAge">
-                    <i class="fas fa-calendar-alt me-2"></i>Device Age
-                  </label>
-                </div>
-              </div>
-
-              <!-- Working Status -->
-              <div class="col-md-6">
-                <div class="form-floating">
-                  <select
-                    v-model="deviceForm.workingStatus"
-                    class="form-select"
-                    id="workingStatus"
-                  >
-                    <option value="Fully Working">Fully Working</option>
-                    <option value="Partially Working">Partially Working</option>
-                    <option value="Not Working">Not Working</option>
-                  </select>
-                  <label for="workingStatus">
-                    <i class="fas fa-power-off me-2"></i>Working Status
-                  </label>
-                </div>
-              </div>
-
               <!-- Known Defects -->
               <div class="col-12">
                 <div class="form-floating">
@@ -434,8 +383,7 @@ const removeImage = (index) => {
   transform: translateY(-2px);
 }
 
-.form-control:focus,
-.form-select:focus {
+.form-control:focus {
   border-color: #4895ef;
   box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.15);
 }
@@ -452,5 +400,23 @@ const removeImage = (index) => {
   .form-decoration-circle {
     opacity: 0.03;
   }
+}
+
+.section-header {
+  position: relative;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+}
+
+.section-header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: var(--bs-primary);
+  border-radius: 2px;
 }
 </style>

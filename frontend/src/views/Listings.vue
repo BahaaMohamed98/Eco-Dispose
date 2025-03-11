@@ -8,7 +8,6 @@ const selectedDeviceId = ref(null);
 const selectedDevice = ref(null);
 const toasts = ref([]);
 
-// Computed properties
 const devices = computed(() => devicesStore.devices);
 
 // Device details modal handling
@@ -121,16 +120,6 @@ const conditionBadgeClass = (condition) => {
     Poor: "bg-danger text-white",
   };
   return map[condition] || "bg-secondary";
-};
-
-const getConditionClass = (condition) => {
-  const conditionMap = {
-    Excellent: "condition-excellent",
-    Good: "condition-good",
-    Fair: "condition-fair",
-    Poor: "condition-poor",
-  };
-  return conditionMap[condition] || "";
 };
 
 const getStatusAlertClass = (status) => {
@@ -548,8 +537,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Minimal custom CSS - using Bootstrap classes when possible */
-
 .section-header {
   position: relative;
   margin-bottom: 2rem;
@@ -655,7 +642,6 @@ onMounted(() => {
   color: white;
 }
 
-/* Improved price tag design */
 .price-badge {
   display: inline-block;
   background: linear-gradient(135deg, #4361ee 0%, #4895ef 100%);
@@ -688,7 +674,6 @@ onMounted(() => {
   font-weight: 600;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .tracking-step {
     min-width: 80px;

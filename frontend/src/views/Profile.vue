@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { store } from "@/store/store.js";
 
-const Address = computed(() => {
+const address = computed(() => {
   const userAddress = store.currentUser?.address;
   let address = "";
 
@@ -103,7 +103,7 @@ const Address = computed(() => {
             </div>
             <div class="field-group">
               <div class="field-label">Address</div>
-              <div class="field-value">{{ Address }}</div>
+              <div class="field-value">{{ address }}</div>
             </div>
           </div>
         </div>
