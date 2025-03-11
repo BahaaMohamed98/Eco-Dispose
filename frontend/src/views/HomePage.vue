@@ -88,8 +88,7 @@ import { store } from "@/store/store.js";
         <div class="card myCard rounded shadow-sm">
           <img
             src="@/assets/laptops.png"
-            class="card-img-top rounded"
-            style="height: 100%"
+            class="card-img-top rounded h-100"
           />
           <div class="card-body">
             <h4 class="fw-bold card-title">Laptops & Tablets</h4>

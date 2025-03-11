@@ -541,7 +541,6 @@ function closeToast(toastId) {
 </template>
 
 <style scoped>
-/* Keep your existing styles */
 #admin-dashboard {
   background-color: #f8f9fa;
   min-height: 100vh;
@@ -677,7 +676,6 @@ function closeToast(toastId) {
   border-color: #4361ee;
 }
 
-/* Updated button styles to match refresh button */
 .btn-primary {
   background-color: #4361ee;
   border-color: #4361ee;

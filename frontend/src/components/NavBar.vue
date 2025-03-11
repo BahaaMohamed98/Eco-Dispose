@@ -13,10 +13,7 @@ function logout() {
   <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark px-3 b-3">
     <div class="container-fluid">
       <!-- brand -->
-      <router-link
-        class="navbar-brand fw-bold"
-        style="color: var(--bs-primary)"
-        to="/home"
+      <router-link class="navbar-brand fw-bold text-primary" to="/home"
         >Eco-Dispose
       </router-link>
 
@@ -40,8 +37,7 @@ function logout() {
               class="nav-link font-size Link"
               :class="{
                 active:
-                  $route.path === link.to.path &&
-                  $route.hash === link.to.hash,
+                  $route.path === link.to.path && $route.hash === link.to.hash,
               }"
               :to="link.to"
               >{{ link.text }}
@@ -105,8 +101,8 @@ function logout() {
               <hr class="dropdown-divider" />
             </li>
             <li>
-              <button class="dropdown-item text-danger" @click="logout"
-                ><i class="fa-solid fa-right-from-bracket"></i> Logout
+              <button class="dropdown-item text-danger" @click="logout">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
               </button>
             </li>
           </ul>
