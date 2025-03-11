@@ -3,14 +3,14 @@
     "isAdmin": true,
     "firstName": "Bahaa",
     "lastName": "Mohamed",
-    "email": "123@ecodispose.com",
+    "email": "123@eco-dispose.com",
     "password": "123",
     "phoneNumber": "01012345678",
     "address": {
       "street": "Faisal",
       "country": "Egypt",
       "city": "Giza",
-      "zip": 123
+      "zip": "123"
     }
   },
   {
@@ -24,7 +24,7 @@
       "street": "Al Madi",
       "country": "Egypt",
       "city": "Cairo",
-      "zip": 853
+      "zip": "853"
     }
   }
 ]

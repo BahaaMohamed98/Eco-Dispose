@@ -1,40 +1,15 @@
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { store } from "@/store/store.js";
 
 const router = useRouter();
 
 // Form data initialized with current user
-const profileForm = reactive({
-  firstName: "",
-  lastName: "",
-  phoneNumber: "",
-  address: {
-    street: "",
-    city: "",
-    country: "",
-    zip: "",
-  },
-});
+const user = ref(store.currentUser);
 
 const profileImage = ref(null);
 const isSubmitting = ref(false);
-
-// Initialize form with current user data
-onMounted(() => {
-  if (store.currentUser) {
-    profileForm.firstName = store.currentUser.firstName || "";
-    profileForm.lastName = store.currentUser.lastName || "";
-    profileForm.phoneNumber = store.currentUser.phoneNumber || "";
-
-    // Handle address
-    profileForm.address.street = store.currentUser.address?.street || "";
-    profileForm.address.city = store.currentUser.address?.city || "";
-    profileForm.address.country = store.currentUser.address?.country || "";
-    profileForm.address.zip = store.currentUser.address?.zip || "";
-  }
-});
 
 // Handle image upload
 function handleImageUpload(event) {
@@ -58,28 +33,26 @@ function removeImage() {
 function updateProfile() {
   isSubmitting.value = true;
 
-  // Update user data in store using the new function
-  if (store.currentUser) {
-    // Save profile data
-    store.updateProfile({
-      firstName: profileForm.firstName,
-      lastName: profileForm.lastName,
-      phoneNumber: profileForm.phoneNumber,
-      address: { ...profileForm.address },
-    });
+  // some artificial delay
+  setTimeout(() => {
+    // Update user data in store using the new function
+    if (store.currentUser) {
+      // Save image if it changed
+      if (profileImage.value) {
+        user.value.profileImage = profileImage;
+      }
 
-    // Save image if changed
-    if (profileImage.value) {
-      store.saveProfileImage(profileImage.value);
+      // Save profile data
+      store.updateProfile(user.value);
+
+      // Navigate back to profile page
+      gotoProfile();
     }
-
-    // Navigate back to profile page
-    router.push("/profile");
-  }
+  }, 800);
 }
 
 // Discard changes and go back to profile
-function discardChanges() {
+function gotoProfile() {
   router.push("/profile");
 }
 </script>
@@ -96,10 +69,10 @@ function discardChanges() {
 
     <div class="container mt-4">
       <div class="row">
-        <!-- Left column - Profile image -->
+        <!-- Left column - Profile picture -->
         <div class="col-lg-3 col-md-4">
           <div class="profile-card">
-            <h5 class="card-title mb-4">Profile Image</h5>
+            <h5 class="card-title text-center fw-bold mb-4">Profile Picture</h5>
 
             <div class="profile-image-container mb-3">
               <!-- Update the image source in the template -->
@@ -107,7 +80,8 @@ function discardChanges() {
                 :src="profileImage || store.getProfileImage()"
                 alt="Profile"
                 class="profile-image"
-            /></div>
+              />
+            </div>
 
             <div class="d-flex gap-2 mb-3">
               <label
@@ -144,7 +118,7 @@ function discardChanges() {
                     <i class="fas fa-user text-primary"></i>
                   </span>
                   <input
-                    v-model="profileForm.firstName"
+                    v-model="user.firstName"
                     type="text"
                     class="form-control"
                     placeholder="Enter first name"
@@ -159,7 +133,7 @@ function discardChanges() {
                     <i class="fas fa-user text-primary"></i>
                   </span>
                   <input
-                    v-model="profileForm.lastName"
+                    v-model="user.lastName"
                     type="text"
                     class="form-control"
                     placeholder="Enter last name"
@@ -176,7 +150,7 @@ function discardChanges() {
                     <i class="fas fa-phone text-primary"></i>
                   </span>
                   <input
-                    v-model="profileForm.phoneNumber"
+                    v-model="user.phoneNumber"
                     type="text"
                     class="form-control"
                     placeholder="Enter phone number"
@@ -195,7 +169,7 @@ function discardChanges() {
                     <i class="fas fa-map-marker-alt text-primary"></i>
                   </span>
                   <input
-                    v-model="profileForm.address.street"
+                    v-model="user.address.street"
                     type="text"
                     class="form-control"
                     placeholder="Enter street address"
@@ -210,7 +184,7 @@ function discardChanges() {
                     <i class="fas fa-city text-primary"></i>
                   </span>
                   <input
-                    v-model="profileForm.address.city"
+                    v-model="user.address.city"
                     type="text"
                     class="form-control"
                     placeholder="Enter city"
@@ -226,11 +200,8 @@ function discardChanges() {
                   <span class="input-group-text bg-light">
                     <i class="fas fa-globe text-primary"></i>
                   </span>
-                  <select
-                    v-model="profileForm.address.country"
-                    class="form-select"
-                  >
-                    <option value="">Select country</option>
+                  <select v-model="user.address.country" class="form-select">
+                    <option value="" disabled>Select country</option>
                     <option value="Egypt">Egypt</option>
                     <option value="USA">United States</option>
                     <option value="UK">United Kingdom</option>
@@ -246,7 +217,7 @@ function discardChanges() {
                     <i class="fas fa-map-pin text-primary"></i>
                   </span>
                   <input
-                    v-model="profileForm.address.zip"
+                    v-model="user.address.zip"
                     type="text"
                     class="form-control"
                     placeholder="Enter postal code"
@@ -256,7 +227,7 @@ function discardChanges() {
             </div>
 
             <div class="d-flex justify-content-end mt-4 gap-3">
-              <button @click="discardChanges" class="btn btn-outline-secondary">
+              <button @click="gotoProfile" class="btn btn-outline-secondary">
                 <i class="fas fa-times me-2"></i>Discard Changes
               </button>
               <button
@@ -264,8 +235,14 @@ function discardChanges() {
                 class="btn btn-primary"
                 :disabled="isSubmitting"
               >
-                <i class="fas fa-save me-2"></i>
-                <span v-if="isSubmitting">Saving...</span>
+                <span
+                  v-if="isSubmitting"
+                  class="spinner-border spinner-border-sm"
+                  aria-hidden="true"
+                ></span>
+                <i v-else class="fas fa-save me-2"></i>
+
+                <span v-if="isSubmitting"> Saving...</span>
                 <span v-else>Save Changes</span>
               </button>
             </div>

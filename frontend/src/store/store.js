@@ -35,20 +35,12 @@ export const store = reactive({
     localStorage.removeItem(currentUserKey);
   },
 
-  // New function to save profile image
-  saveProfileImage(imageData) {
-    if (this.currentUser) {
-      this.currentUser.profileImage = imageData;
-      saveUser();
-    }
-  },
-
-  // New function to get profile image or placeholder
+  // get the profile picture or return the placeholder
   getProfileImage() {
-    return this.currentUser?.profileImage || "/src/assets/placeholder.png";
+    return this.currentUser?.profileImage || "/assets/placeholder.png";
   },
 
-  // New function to update user profile
+  // update user profile
   updateProfile(profileData) {
     if (this.currentUser) {
       Object.assign(this.currentUser, profileData);

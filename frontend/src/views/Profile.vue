@@ -3,8 +3,22 @@ import { computed } from "vue";
 import { store } from "@/store/store.js";
 
 const Address = computed(() => {
-  const user = store.currentUser;
-  return `${user.address.street}, ${user.address.city}, ${user.address.country}`;
+  const userAddress = store.currentUser?.address;
+  let address = "";
+
+  if (userAddress?.street) {
+    address += userAddress.street + ", ";
+  }
+
+  if (userAddress?.city) {
+    address += userAddress.city + ", ";
+  }
+
+  if (userAddress?.country) {
+    address += userAddress.country;
+  }
+
+  return address;
 });
 </script>
 
@@ -33,11 +47,12 @@ const Address = computed(() => {
                 object-fit: cover;
                 border-radius: 50%;
               "
-          /></div>
+            />
+          </div>
 
-          <h2 class="username">{{
-            `${store.currentUser.firstName} ${store.currentUser.lastName}`
-          }}</h2>
+          <h2 class="username">
+            {{ `${store.currentUser.firstName} ${store.currentUser.lastName}` }}
+          </h2>
           <div class="admin-badge">
             <div v-if="store.currentUser.isAdmin">
               <span class="crown-icon">👑</span>
@@ -76,14 +91,14 @@ const Address = computed(() => {
             </div>
             <div class="field-group">
               <div class="field-label">Role</div>
-              <div class="field-value"
-                >{{ store.currentUser.isAdmin ? "Administrator" : "User" }}
+              <div class="field-value">
+                {{ store.currentUser.isAdmin ? "Administrator" : "User" }}
               </div>
             </div>
             <div class="field-group">
               <div class="field-label">Phone Number</div>
-              <div class="field-value"
-                >{{ store.currentUser.phoneNumber }}
+              <div class="field-value">
+                {{ store.currentUser?.phoneNumber }}
               </div>
             </div>
             <div class="field-group">
