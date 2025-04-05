@@ -13,7 +13,7 @@ function logout() {
   <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark px-3 b-3">
     <div class="container-fluid">
       <!-- brand -->
-      <router-link class="navbar-brand fw-bold text-primary" to="/home"
+      <router-link class="navbar-brand fs-4 fw-bold text-primary" to="/home"
         >Eco-Dispose
       </router-link>
 
@@ -61,7 +61,7 @@ function logout() {
             <img
               :src="store.getProfileImage()"
               alt="Profile"
-              class="profile-pic rounded-circle img"
+              class="profile-pic rounded-circle"
           /></router-link>
 
           <!-- Profile Dropdown -->
@@ -116,16 +116,6 @@ function logout() {
 /* remove dropdown arrow */
 .dropdown-toggle::after {
   content: none;
-}
-
-.navbar {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 0.5rem 1rem;
-  transition: all 0.3s ease;
-}
-
-.navbar-brand {
-  font-size: 1.5rem;
 }
 
 .nav-link {
