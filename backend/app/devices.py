@@ -1,8 +1,8 @@
 from flask import Blueprint
 
-routes = Blueprint("routes", __name__)
+devices = Blueprint("devices", __name__)
 
 
-@routes.route("/")
+@devices.get("/")
 def index():
     return "<h1>Hello, world</h1>"

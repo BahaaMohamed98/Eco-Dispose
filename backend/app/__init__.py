@@ -10,10 +10,10 @@ def create_app():
     db.init_app(app)
 
     from .auth import auth
-    from .routes import routes
+    from .devices import devices
 
     app.register_blueprint(auth, url_prefix="/auth")
-    app.register_blueprint(routes, url_prefix="/")
+    app.register_blueprint(devices, url_prefix="/devices")
 
     # from .models import
 
