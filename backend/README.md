@@ -17,8 +17,8 @@ Flask backend providing user authentication, device tracking, and file uploads.
 ### Create a virtual environment
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 ### Install the requirements
