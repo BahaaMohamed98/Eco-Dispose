@@ -1,12 +1,14 @@
 <html>
   <head>
-    <title>Page Not Found</title>
+    <title>Eco Dispose</title>
   </head>
   <body>
-    <h1>Page Not Found</h1>
     <script>
-      // Redirect to index.html
-      window.location.replace("/Eco-Dispose/index.html");
+      // Get the current path that the user was trying to access
+      const currentPath = window.location.pathname;
+
+      // Redirect to the index page with the correct path
+      window.location.replace(`/Eco-Dispose${currentPath}`);
     </script>
   </body>
 </html>
