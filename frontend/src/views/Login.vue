@@ -28,11 +28,10 @@ const isFormInvalid = computed(() => !email.value || !password.value);
     <div
       class="col-lg"
       style="
-        background: url(/assets/computerchip1.jpeg) no-repeat center center;
+        background: url(assets/computerchip1.jpeg) no-repeat center center;
         background-size: cover;
       "
-    >
-    </div>
+    ></div>
 
     <div class="col-sm">
       <form class="p-3">

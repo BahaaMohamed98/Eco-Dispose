@@ -37,7 +37,7 @@ export const store = reactive({
 
   // get the profile picture or return the placeholder
   getProfileImage() {
-    return this.currentUser?.profileImage || "/assets/placeholder.png";
+    return this.currentUser?.profileImage || "assets/placeholder.png";
   },
 
   // update user profile
@@ -59,7 +59,7 @@ export const devicesStore = reactive({
   },
 
   getDeviceImage(device) {
-    return device.image || "/assets/devices/device.png";
+    return device.image || "assets/devices/device.png";
   },
 
   updateDeviceStatus(deviceId, status) {
@@ -72,7 +72,7 @@ export const devicesStore = reactive({
 // init store data
 (() => {
   // fetch predefined users
-  fetch("/data/users.json")
+  fetch("data/users.json")
     .then((data) => data.json())
     .then((users) => (store.users = users))
     .catch((e) => console.error(e));
@@ -85,7 +85,7 @@ export const devicesStore = reactive({
 
 // init devices store data
 (() => {
-  fetch("/data/devices.json")
+  fetch("data/devices.json")
     .then((data) => data.json())
     .then((devices) => {
       // Replace the hardcoded devices with fetched data

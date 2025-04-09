@@ -132,7 +132,7 @@ const isFormInvalid = computed(
     <div
       class="col-lg"
       style="
-        background: url(/assets/computerchip2.jpeg) no-repeat center center;
+        background: url(assets/computerchip2.jpeg) no-repeat center center;
         background-size: cover;
       "
     ></div>
