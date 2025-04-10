@@ -2,6 +2,9 @@
 import { store } from "@/store/store.js";
 import { links } from "@/store/links.js";
 import router from "@/router/routes.js";
+import { ref } from "vue";
+
+const navBarExpanded = ref(false);
 
 function logout() {
   store.logout();
@@ -17,20 +20,19 @@ function logout() {
         >Eco-Dispose
       </router-link>
 
-      <!--            <img src="@/assets/logo.png" class="navbar-brand" width="200" height="200" />-->
-
       <!-- navbar toggler -->
       <button
         class="navbar-toggler"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
+        :aria-expanded="navBarExpanded"
+        aria-label="Toggle navigation"
+        @click.prevent="navBarExpanded = !navBarExpanded"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <!-- links -->
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="collapse navbar-collapse" :class="{ show: navBarExpanded }">
         <ul class="navbar-nav text-center">
           <li v-for="(link, index) in links" :key="index" class="nav-item">
             <router-link
@@ -134,5 +136,42 @@ function logout() {
 
 .profile-pic:hover {
   transform: scale(1.1);
+}
+
+@media (max-width: 992px) {
+  .dropdown.d-flex {
+    justify-content: center;
+    margin: 1rem 0;
+  }
+
+  .navbar-collapse:not(.show) {
+    display: block !important;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  .navbar-collapse.show {
+    height: auto;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation for navbar collapse/expand */
+.navbar-collapse {
+  transition: all 0.4s ease;
+}
+
+.navbar-toggler {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
 }
 </style>
