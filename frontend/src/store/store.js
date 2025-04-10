@@ -37,7 +37,7 @@ export const store = reactive({
 
   // get the profile picture or return the placeholder
   getProfileImage() {
-    return this.currentUser?.profileImage || "assets/placeholder.png";
+    return this.currentUser?.profileImage || "@/assets/placeholder.png";
   },
 
   // update user profile
@@ -59,7 +59,7 @@ export const devicesStore = reactive({
   },
 
   getDeviceImage(device) {
-    return device.image || "assets/devices/device.png";
+    return device.image || "@/assets/devices/device.png";
   },
 
   updateDeviceStatus(deviceId, status) {
