@@ -1,4 +1,6 @@
 from flask import Flask
+
+from .auth import login_manager
 from .models import db
 
 
@@ -8,6 +10,8 @@ def create_app():
 
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
     db.init_app(app)
+
+    login_manager.init_app(app)
 
     from .auth import auth
     from .devices import devices

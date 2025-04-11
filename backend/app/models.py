@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(30), nullable=False, unique=True)
     password = db.Column(db.String(30), nullable=False)
     phone_number = db.Column(db.String(30))
-    is_admin = db.Column(db.Boolean, nullable=False)
+    is_admin = db.Column(db.Boolean, nullable=False, default=False)
     profile_image_url = db.Column(db.String(80))
     address_id = db.Column(db.Integer, db.ForeignKey("address.id"))
     address = db.relationship("Address", backref="user")
@@ -33,7 +33,7 @@ class User(db.Model, UserMixin):
             "email": self.email,
             "phoneNumber": self.phone_number,
             "isAdmin": self.is_admin,
-            "profileImage ": self.profile_image_url,
+            "profileImageUrl": self.profile_image_url,
             "address": self.address.to_json(),
         }
 
@@ -51,7 +51,7 @@ class Address(db.Model):
             "street": self.street,
             "city": self.city,
             "country": self.country,
-            "zip": self.zip_code,
+            "zipCode": self.zip_code,
         }
 
 
@@ -93,7 +93,7 @@ class Device(db.Model):
             "estimatedPrice": self.estimated_price,
             "adminNotes": self.admin_notes,
             "userDescription": self.user_description,
-            "image": self.image_url,
+            "imageUrl": self.image_url,
             "uploadDate": self.upload_date.isoformat() if self.upload_date else None,
             "userId": self.user_id,
         }
