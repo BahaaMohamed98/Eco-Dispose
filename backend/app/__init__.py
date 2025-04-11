@@ -15,8 +15,6 @@ def create_app():
     app.register_blueprint(auth, url_prefix="/auth")
     app.register_blueprint(devices, url_prefix="/devices")
 
-    # from .models import
-
     with app.app_context():
         db.create_all()
 
