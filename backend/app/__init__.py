@@ -1,3 +1,6 @@
+import os
+
+from dotenv import load_dotenv
 from flask import Flask
 
 from .auth import login_manager
@@ -7,12 +10,14 @@ from .models import db
 
 def create_app():
     app = Flask(__name__)
-    app.secret_key = "dev"
+
+    load_dotenv()
+    app.secret_key = os.getenv("SECRET_KEY")
 
     app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
     app.config["MAX_CONTENT_LENGTH"] = 16 * 1000 * 1000
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
     db.init_app(app)
 
     login_manager.init_app(app)
