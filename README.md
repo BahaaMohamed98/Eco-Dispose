@@ -1,44 +1,65 @@
-# E-Waste Management System
+# Eco-Dispose: E-Waste Management System
 
-A web-based application for managing and recycling electronic waste, built with HTML, CSS, and JavaScript for the
-frontend. The backend will be implemented later.
+A full-stack application for electronic waste management and recycling, built with Vue.js and Flask.
+
+## Overview
+
+Eco-Dispose allows users to submit electronic devices for evaluation and recycling. Users can track their devices through the entire lifecycle from submission to final recycling.
+
+![Project Screenshot](assets/preview.png)
+
+## Key Features
+
+- User authentication and profile management
+- Electronic device submission with photos
+- Real-time status tracking
+- Admin dashboard for device evaluation
+- Offer management-system
 
 ## Project Structure
 
-```
-project-root/
-├── backend/        # Backend code (to be implemented)
-├── frontend/       # Frontend code
-│   ├── assets/     # Images, icons, etc.
-│   ├── css/        # Stylesheets
-│   ├── data/       # JSON files simulating backend responses
-│   ├── js/         # JavaScript files
-│   ├── pages/      # Additional HTML pages
-│   ├── index.html  # Main entry point
-│   ├── package.json  # Node dependencies (if applicable)
-│   ├── package-lock.json  # Lockfile
-│   ├── README.md   # Frontend-specific README
-└── README.md       # This file (Project-wide README)
+```text
+Eco-Dispose/
+├── backend/ # Flask API server
+├── frontend/ # Vue.js SPA
+├── docs/ # Project documentation
+└── README.md
 ```
 
-## Features
+## Quick Start
 
-- **Frontend:** Static HTML, CSS, and JavaScript for now.
-- **Data Simulation:** JSON files in `frontend/data/` to act as a temporary backend.
-- **Responsive Design:** Fully functional across different screen sizes.
-- **Backend:** Planned but not yet implemented.
+### Frontend Setup
+```bash
+cd frontend
 
-## Setup Instructions
+# Install dependencies
+npm install
 
-### Clone the repository:
+# Build the project
+npm run build
 
-```sh
-git clone https://github.com/BahaaMohamed98/E-Waste-Management-System.git
-cd E-Waste-Management-System
+# Run the development server  
+npm run preview
 ```
 
-## Future Plans
+### Backend Setup
+```bash
+cd backend
 
-- Implement a backend (Flask or Node.js/Express).
-- Connect frontend with a real database.
-- Add authentication and user accounts.
+# Create a virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install the requirements
+pip install -r requirements.txt
+
+# run the server
+flask run
+```
+## Documentation
+- [API Documentation](docs/api/index.md)
+- [Frontend Documentation](frontend/README.md)
+- [Backend Documentation](backend/README.md)
+
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.    
