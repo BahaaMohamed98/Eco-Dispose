@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, json, jsonify, request
 from flask_login import (
     LoginManager,
     current_user,
@@ -10,6 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from .models import Address, User, db
+from .util import save_file
 
 auth = Blueprint("auth", __name__)
 login_manager = LoginManager()
@@ -103,21 +104,23 @@ def profile():
 @auth.post("/edit")
 @login_required
 def edit():
-    try:
-        data = request.json
+    image = request.files.get("profileImage")
+    json_data = request.form.get("user")
 
-        if data is None:
-            return jsonify({"error": "no data provided"}), 400
+    if json_data is None and image is None:
+        return jsonify({"error": "no data provided"}), 400
 
-        # TODO: handle changing profile picture
-        if "firstName" in data:
-            current_user.first_name = data["firstName"]
-        if "lastName" in data:
-            current_user.last_name = data["lastName"]
-        if "phoneNumber" in data:
-            current_user.phone_number = data["phoneNumber"]
+    if json_data:
+        user = json.loads(json_data)
 
-        user_address = data["address"]
+        if "firstName" in user:
+            current_user.first_name = user["firstName"]
+        if "lastName" in user:
+            current_user.last_name = user["lastName"]
+        if "phoneNumber" in user:
+            current_user.phone_number = user["phoneNumber"]
+
+        user_address = user["address"]
 
         if user_address:
             if "street" in user_address:
@@ -129,6 +132,11 @@ def edit():
             if "zipCode" in user_address:
                 current_user.address.zip_code = user_address["zipCode"]
 
+        if image:
+            file_path = save_file(image)
+            current_user.profile_image_url = file_path
+
+    try:
         db.session.commit()
 
         return jsonify(
