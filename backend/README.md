@@ -53,9 +53,10 @@ pip install -r requirements.txt
 ```bash
 flask run --debug
 ```
+
 ## API Endpoints
 
-### Authentication
+### [Authentication](../docs/api/auth.md)
 
 - `POST /auth/register` - User registration
 - `POST /auth/login` - User login
@@ -63,21 +64,23 @@ flask run --debug
 - `POST /auth/edit` - Update user profile
 - `POST /auth/logout` - User logout
 
-### Devices
+### [Devices](../docs/api/devices.md)
 
 - `GET /devices` - List user's devices
 - `POST /devices` - Submit new device
 - `PUT /devices/<id>` - Update device status
 - `DELETE /devices/<id>` - Delete device
 
-## Database Models
+## [Database Models](../docs/api/index.md#database-schema)
 
 - `User` - User accounts with authentication details
 - `Device` - Electronic devices submitted for recycling
 - `Address` - User address information
 
 ## Error Handling
+
 The API uses standard HTTP status codes for error handling. Common errors include:
+
 - `200 OK` - Successful request
 - `400 Bad Request` - Invalid input data
 - `401 Unauthorized` - Authentication required
