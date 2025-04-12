@@ -1,12 +1,16 @@
 from flask import Flask
 
 from .auth import login_manager
+from .config import UPLOAD_FOLDER
 from .models import db
 
 
 def create_app():
     app = Flask(__name__)
     app.secret_key = "dev"
+
+    app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+    app.config["MAX_CONTENT_LENGTH"] = 16 * 1000 * 1000
 
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
     db.init_app(app)
