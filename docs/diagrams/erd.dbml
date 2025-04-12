@@ -1,0 +1,47 @@
+Table User {
+  id integer [pk]
+  first_name varchar
+  last_name varchar
+  email varchar [unique]
+  password varchar
+  phone_number varchar
+  is_admin boolean
+  profile_image_url varchar
+  address_id integer [ref: - Address.id]
+}
+
+Table Address {
+  id integer [pk]
+  street varchar
+  city varchar
+  country varchar
+  zip_code varchar
+}
+
+Enum device_condition {
+  excellent
+  good
+  fair
+  poor
+}
+
+Enum device_status {
+  waiting
+  collected
+  evaluated
+  accepted
+  rejected
+}
+
+Table Device {
+  id integer [pk]
+  name varchar
+  condition device_condition
+  status device_status
+  estimated_price float
+  admin_notes varchar
+  user_description varchar
+  image_url varchar
+  upload_date datetime
+  user_id integer [ref: > User.id]
+}
