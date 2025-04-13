@@ -10,7 +10,7 @@ from .util import save_file
 
 from .models import Device, db, DeviceCondition, DeviceStatus
 
-devices = Blueprint("devices", _name_)
+devices = Blueprint("devices", __name__)
 
 
 @devices.get("/")
