@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, jsonify
 
 from .auth import login_manager
 from .config import UPLOAD_FOLDER
@@ -27,6 +27,16 @@ def create_app():
 
     app.register_blueprint(auth, url_prefix="/auth")
     app.register_blueprint(devices, url_prefix="/devices")
+
+    # Global error handler for 404 (Page Not Found)
+    @app.errorhandler(404)
+    def not_found_error(error):
+        return jsonify({"error": "Resource not found"}), 404
+
+    # Global error handler for 500 (Internal Server Error)
+    @app.errorhandler(500)
+    def internal_error(error):
+        return jsonify({"error": "An unexpected error occurred"}), 500
 
     with app.app_context():
         db.create_all()
