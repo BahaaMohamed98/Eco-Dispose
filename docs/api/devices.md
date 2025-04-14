@@ -71,8 +71,8 @@ Regular users receive their own devices:
     "userDescription": "Good condition, minor scratches on screen",
     "imageUrl": "/uploads/device1234.jpg",
     "uploadDate": "2025-04-10T14:30:00Z",
-    "condition": "GOOD",
-    "status": "PENDING_REVIEW",
+    "condition": "good",
+    "status": "collected",
     "estimatedPrice": 150.0,
     "adminNotes": null,
     "userId": 1
@@ -83,8 +83,8 @@ Regular users receive their own devices:
     "userDescription": "Perfect working condition, factory reset completed",
     "imageUrl": "/uploads/device5678.jpg",
     "uploadDate": "2025-04-12T09:15:00Z",
-    "condition": "EXCELLENT",
-    "status": "APPROVED",
+    "condition": "excellent",
+    "status": "approved",
     "estimatedPrice": 200.0,
     "adminNotes": "Device verified, ready for processing",
     "userId": 1
@@ -102,8 +102,8 @@ Administrators receive all devices in the system:
     "userDescription": "Good condition, minor scratches on screen",
     "imageUrl": "/uploads/device1234.jpg",
     "uploadDate": "2025-04-10T14:30:00Z",
-    "condition": "GOOD",
-    "status": "PENDING_REVIEW",
+    "condition": "good",
+    "status": "collected",
     "estimatedPrice": 150.0,
     "adminNotes": null,
     "userId": 1
@@ -114,8 +114,8 @@ Administrators receive all devices in the system:
     "userDescription": "Perfect working condition, factory reset completed",
     "imageUrl": "/uploads/device5678.jpg",
     "uploadDate": "2025-04-12T09:15:00Z",
-    "condition": "EXCELLENT",
-    "status": "APPROVED",
+    "condition": "excellent",
+    "status": "approved",
     "estimatedPrice": 200.0,
     "adminNotes": "Device verified, ready for processing",
     "userId": 1
@@ -126,8 +126,8 @@ Administrators receive all devices in the system:
     "userDescription": "3 years old, battery needs replacement",
     "imageUrl": "/uploads/device9012.jpg",
     "uploadDate": "2025-04-11T11:45:00Z",
-    "condition": "FAIR",
-    "status": "PENDING_REVIEW",
+    "condition": "fair",
+    "status": "collected",
     "estimatedPrice": null,
     "adminNotes": null,
     "userId": 2
@@ -226,7 +226,7 @@ The `device` JSON object must include:
     "imageUrl": "/uploads/device1234.jpg",
     "uploadDate": "2025-04-13T14:30:00Z",
     "condition": null,
-    "status": "PENDING_REVIEW",
+    "status": "collected",
     "estimatedPrice": null,
     "adminNotes": null,
     "userId": 1
@@ -330,8 +330,8 @@ Update information for an existing device.
 
 ```json
 {
-  "condition": "EXCELLENT",
-  "status": "APPROVED",
+  "condition": "excellent",
+  "status": "approved",
   "estimatedPrice": 200.0,
   "adminNotes": "Device verified, ready for processing"
 }
@@ -357,8 +357,8 @@ Notes:
     "userDescription": "Good condition, minor scratches on screen",
     "imageUrl": "/uploads/device1234.jpg",
     "uploadDate": "2025-04-10T14:30:00Z",
-    "condition": "EXCELLENT",
-    "status": "APPROVED",
+    "condition": "excellent",
+    "status": "approved",
     "estimatedPrice": 200.0,
     "adminNotes": "Device verified, ready for processing",
     "userId": 1
@@ -433,8 +433,8 @@ async function updateDevice(deviceId, updatedData) {
 
 // Example usage
 const updateData = {
-  condition: "EXCELLENT",
-  status: "APPROVED",
+  condition: "excellent",
+  status: "approved",
   estimatedPrice: 200.0,
   adminNotes: "Device verified, ready for processing",
 };
