@@ -10,7 +10,7 @@ devices while administrators have expanded capabilities.
 ## 🌐 API Overview
 
 | Endpoint                          | Method | Description               | Authentication Required | User Type     |
-|-----------------------------------|--------|---------------------------|-------------------------|---------------|
+| --------------------------------- | ------ | ------------------------- | ----------------------- | ------------- |
 | [`/devices/`](#list-devices)      | GET    | List devices              | Yes                     | Any           |
 | [`/devices/`](#add-device)        | POST   | Submit a new device       | Yes                     | Regular Users |
 | [`/devices/<id>`](#update-device) | PUT    | Update device information | Yes                     | User/Admin    |
@@ -27,18 +27,18 @@ sequenceDiagram
     participant User
     participant API
     participant Database
-    
+
     User->>API: Submit Device
     API->>Database: Store Device Details
     Database-->>API: Confirmation
     API-->>User: Device Accepted
-    
+
     Note over User,API: Admin Review Process
-    
+
     API->>Database: Update Status/Condition
     Database-->>API: Confirmation
     API-->>User: Status Update Notification
-    
+
     User->>API: Check Device Status
     API->>Database: Query Device
     Database-->>API: Current Status
@@ -73,7 +73,7 @@ Regular users receive their own devices:
     "uploadDate": "2025-04-10T14:30:00Z",
     "condition": "GOOD",
     "status": "PENDING_REVIEW",
-    "estimatedPrice": 150.00,
+    "estimatedPrice": 150.0,
     "adminNotes": null,
     "userId": 1
   },
@@ -85,7 +85,7 @@ Regular users receive their own devices:
     "uploadDate": "2025-04-12T09:15:00Z",
     "condition": "EXCELLENT",
     "status": "APPROVED",
-    "estimatedPrice": 200.00,
+    "estimatedPrice": 200.0,
     "adminNotes": "Device verified, ready for processing",
     "userId": 1
   }
@@ -104,7 +104,7 @@ Administrators receive all devices in the system:
     "uploadDate": "2025-04-10T14:30:00Z",
     "condition": "GOOD",
     "status": "PENDING_REVIEW",
-    "estimatedPrice": 150.00,
+    "estimatedPrice": 150.0,
     "adminNotes": null,
     "userId": 1
   },
@@ -116,7 +116,7 @@ Administrators receive all devices in the system:
     "uploadDate": "2025-04-12T09:15:00Z",
     "condition": "EXCELLENT",
     "status": "APPROVED",
-    "estimatedPrice": 200.00,
+    "estimatedPrice": 200.0,
     "adminNotes": "Device verified, ready for processing",
     "userId": 1
   },
@@ -160,24 +160,24 @@ For a comprehensive list of status codes, see [API Status Codes](index.md#status
 ```javascript
 // Get Devices Example
 async function getDevices() {
-    try {
-        const response = await fetch('/devices/', {
-            method: 'GET',
-            credentials: 'include' // Important for sending cookies in cross-origin requests
-        });
+  try {
+    const response = await fetch("/devices/", {
+      method: "GET",
+      credentials: "include", // Important for sending cookies in cross-origin requests
+    });
 
-        const data = await response.json();
+    const data = await response.json();
 
-        if (!response.ok) {
-            throw new Error(data.error || data.message || 'Failed to fetch devices');
-        }
-
-        console.log('Devices retrieved successfully:', data);
-        return data;
-    } catch (error) {
-        console.error('Error retrieving devices:', error);
-        throw error;
+    if (!response.ok) {
+      throw new Error(data.error || data.message || "Failed to fetch devices");
     }
+
+    console.log("Devices retrieved successfully:", data);
+    return data;
+  } catch (error) {
+    console.error("Error retrieving devices:", error);
+    throw error;
+  }
 }
 ```
 
@@ -195,7 +195,7 @@ Submit a new device for recycling.
 #### Request Parameters
 
 | Field  | Type        | Required | Description                           |
-|--------|-------------|----------|---------------------------------------|
+| ------ | ----------- | -------- | ------------------------------------- |
 | device | JSON String | Yes      | JSON string containing device details |
 | image  | File        | Yes      | Image of the device                   |
 
@@ -204,6 +204,8 @@ The `device` JSON object must include:
 ```json
 {
   "name": "Device Name",
+  "type": "Device type",
+  "defects": "Device defects",
   "userDescription": "Detailed description of the device condition"
 }
 ```
@@ -218,6 +220,8 @@ The `device` JSON object must include:
   "device": {
     "id": 1,
     "name": "iPhone 12",
+    "type": "Phone",
+    "defects": "broken power button",
     "userDescription": "Good condition, minor scratches on screen",
     "imageUrl": "/uploads/device1234.jpg",
     "uploadDate": "2025-04-13T14:30:00Z",
@@ -271,37 +275,37 @@ For a comprehensive list of status codes, see [API Status Codes](index.md#status
 ```javascript
 // Add Device Example
 async function addDevice(deviceName, userDescription, imageFile) {
-    try {
-        const formData = new FormData();
+  try {
+    const formData = new FormData();
 
-        // Create device JSON object
-        const deviceData = {
-            name: deviceName,
-            userDescription: userDescription
-        };
+    // Create device JSON object
+    const deviceData = {
+      name: deviceName,
+      userDescription: userDescription,
+    };
 
-        // Append data to form
-        formData.append('device', JSON.stringify(deviceData));
-        formData.append('image', imageFile);
+    // Append data to form
+    formData.append("device", JSON.stringify(deviceData));
+    formData.append("image", imageFile);
 
-        const response = await fetch('/devices/', {
-            method: 'POST',
-            body: formData,
-            credentials: 'include'
-        });
+    const response = await fetch("/devices/", {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    });
 
-        const data = await response.json();
+    const data = await response.json();
 
-        if (!response.ok) {
-            throw new Error(data.error || data.message || 'Failed to add device');
-        }
-
-        console.log('Device added successfully:', data);
-        return data;
-    } catch (error) {
-        console.error('Error adding device:', error);
-        throw error;
+    if (!response.ok) {
+      throw new Error(data.error || data.message || "Failed to add device");
     }
+
+    console.log("Device added successfully:", data);
+    return data;
+  } catch (error) {
+    console.error("Error adding device:", error);
+    throw error;
+  }
 }
 ```
 
@@ -319,7 +323,7 @@ Update information for an existing device.
 #### Path Parameters
 
 | Parameter | Type    | Description      |
-|-----------|---------|------------------|
+| --------- | ------- | ---------------- |
 | id        | Integer | ID of the device |
 
 #### Request Body
@@ -328,7 +332,7 @@ Update information for an existing device.
 {
   "condition": "EXCELLENT",
   "status": "APPROVED",
-  "estimatedPrice": 200.00,
+  "estimatedPrice": 200.0,
   "adminNotes": "Device verified, ready for processing"
 }
 ```
@@ -355,7 +359,7 @@ Notes:
     "uploadDate": "2025-04-10T14:30:00Z",
     "condition": "EXCELLENT",
     "status": "APPROVED",
-    "estimatedPrice": 200.00,
+    "estimatedPrice": 200.0,
     "adminNotes": "Device verified, ready for processing",
     "userId": 1
   }
@@ -403,41 +407,41 @@ For a comprehensive list of status codes, see [API Status Codes](index.md#status
 ```javascript
 // Update Device Example
 async function updateDevice(deviceId, updatedData) {
-    try {
-        const response = await fetch(`/devices/${deviceId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedData),
-            credentials: 'include'
-        });
+  try {
+    const response = await fetch(`/devices/${deviceId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedData),
+      credentials: "include",
+    });
 
-        const data = await response.json();
+    const data = await response.json();
 
-        if (!response.ok) {
-            throw new Error(data.error || data.message || 'Failed to update device');
-        }
-
-        console.log('Device updated successfully:', data);
-        return data;
-    } catch (error) {
-        console.error('Error updating device:', error);
-        throw error;
+    if (!response.ok) {
+      throw new Error(data.error || data.message || "Failed to update device");
     }
+
+    console.log("Device updated successfully:", data);
+    return data;
+  } catch (error) {
+    console.error("Error updating device:", error);
+    throw error;
+  }
 }
 
 // Example usage
 const updateData = {
-    condition: 'EXCELLENT',
-    status: 'APPROVED',
-    estimatedPrice: 200.00,
-    adminNotes: 'Device verified, ready for processing'
+  condition: "EXCELLENT",
+  status: "APPROVED",
+  estimatedPrice: 200.0,
+  adminNotes: "Device verified, ready for processing",
 };
 
 updateDevice(1, updateData)
-    .then(result => console.log('Update successful:', result))
-    .catch(error => console.error('Update failed:', error));
+  .then((result) => console.log("Update successful:", result))
+  .catch((error) => console.error("Update failed:", error));
 ```
 
 ---
@@ -453,7 +457,7 @@ Remove a device from the system.
 #### Path Parameters
 
 | Parameter | Type    | Description      |
-|-----------|---------|------------------|
+| --------- | ------- | ---------------- |
 | id        | Integer | ID of the device |
 
 #### Response
@@ -499,24 +503,24 @@ For a comprehensive list of status codes, see [API Status Codes](index.md#status
 ```javascript
 // Delete Device Example
 async function deleteDevice(deviceId) {
-    try {
-        const response = await fetch(`/devices/${deviceId}`, {
-            method: 'DELETE',
-            credentials: 'include'
-        });
+  try {
+    const response = await fetch(`/devices/${deviceId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
 
-        const data = await response.json();
+    const data = await response.json();
 
-        if (!response.ok) {
-            throw new Error(data.error || data.message || 'Failed to delete device');
-        }
-
-        console.log('Device deleted successfully');
-        return data;
-    } catch (error) {
-        console.error('Error deleting device:', error);
-        throw error;
+    if (!response.ok) {
+      throw new Error(data.error || data.message || "Failed to delete device");
     }
+
+    console.log("Device deleted successfully");
+    return data;
+  } catch (error) {
+    console.error("Error deleting device:", error);
+    throw error;
+  }
 }
 ```
 
@@ -547,7 +551,7 @@ The Devices API implements role-based permissions:
 ### Device Status Enum Values
 
 | Status    | Description                                               |
-|-----------|-----------------------------------------------------------|
+| --------- | --------------------------------------------------------- |
 | Waiting   | Device submitted but not yet reviewed by an admin         |
 | Collected | Device currently being processed for recycling            |
 | Approved  | User approved offer for the device (ready for processing) |
@@ -556,7 +560,7 @@ The Devices API implements role-based permissions:
 ### Device Condition Enum Values
 
 | Condition | Description                                       |
-|-----------|---------------------------------------------------|
+| --------- | ------------------------------------------------- |
 | Excellent | Device in perfect or near-perfect condition       |
 | Good      | Device works well with minor cosmetic issues      |
 | Fair      | Device works but has noticeable wear              |
@@ -583,3 +587,4 @@ the [API Status Codes](index.md#status-codes) in the main documentation.
   <p>Last Updated: 2025-04-13 14:57:37</p>
   <p>© 2025 Eco-Dispose</p>
 </div>
+
