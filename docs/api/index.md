@@ -38,15 +38,6 @@ Entity-relationship diagram for the system:
 
 ![Database ERD](/docs/diagrams/erd.png)
 
-## Technology Stack
-
-The Eco-Dispose platform is built with the following technologies:
-
-- **Frontend**: Vue.js (82.5%)
-- **Backend**: Python/Flask (11.7%)
-- **Auxiliary Scripts**: JavaScript (4.4%)
-- **Configuration & Other**: (1.4%)
-
 ## Response Format
 
 API responses follow consistent conventions:
