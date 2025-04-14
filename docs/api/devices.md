@@ -68,6 +68,8 @@ Regular users receive their own devices:
   {
     "id": 1,
     "name": "iPhone 12",
+    "type": "Phone",
+    "defects": "none",
     "userDescription": "Good condition, minor scratches on screen",
     "imageUrl": "/uploads/device1234.jpg",
     "uploadDate": "2025-04-10T14:30:00Z",
@@ -80,6 +82,8 @@ Regular users receive their own devices:
   {
     "id": 2,
     "name": "Samsung Galaxy S21",
+    "type": "Phone",
+    "defects": "none",
     "userDescription": "Perfect working condition, factory reset completed",
     "imageUrl": "/uploads/device5678.jpg",
     "uploadDate": "2025-04-12T09:15:00Z",
@@ -99,6 +103,8 @@ Administrators receive all devices in the system:
   {
     "id": 1,
     "name": "iPhone 12",
+    "type": "Phone",
+    "defects": "none",
     "userDescription": "Good condition, minor scratches on screen",
     "imageUrl": "/uploads/device1234.jpg",
     "uploadDate": "2025-04-10T14:30:00Z",
@@ -111,6 +117,8 @@ Administrators receive all devices in the system:
   {
     "id": 2,
     "name": "Samsung Galaxy S21",
+    "type": "Phone",
+    "defects": "none",
     "userDescription": "Perfect working condition, factory reset completed",
     "imageUrl": "/uploads/device5678.jpg",
     "uploadDate": "2025-04-12T09:15:00Z",
@@ -123,6 +131,8 @@ Administrators receive all devices in the system:
   {
     "id": 3,
     "name": "Dell XPS 13",
+    "type": "Phone",
+    "defects": "battery life",
     "userDescription": "3 years old, battery needs replacement",
     "imageUrl": "/uploads/device9012.jpg",
     "uploadDate": "2025-04-11T11:45:00Z",
@@ -240,7 +250,7 @@ The `device` JSON object must include:
 
 ```json
 {
-  "error": "Missing required fields: name, user_description, or image_url"
+  "error": "Missing required fields: name, type, defects, user_description, or image_url"
 }
 ```
 
@@ -281,6 +291,8 @@ async function addDevice(deviceName, userDescription, imageFile) {
     // Create device JSON object
     const deviceData = {
       name: deviceName,
+      type: deviceType,
+      defects: deviceDefects,
       userDescription: userDescription,
     };
 
@@ -354,6 +366,8 @@ Notes:
   "device": {
     "id": 1,
     "name": "iPhone 12",
+    "type": "Phone",
+    "defects": "none",
     "userDescription": "Good condition, minor scratches on screen",
     "imageUrl": "/uploads/device1234.jpg",
     "uploadDate": "2025-04-10T14:30:00Z",
@@ -587,4 +601,3 @@ the [API Status Codes](index.md#status-codes) in the main documentation.
   <p>Last Updated: 2025-04-13 14:57:37</p>
   <p>© 2025 Eco-Dispose</p>
 </div>
-
