@@ -76,7 +76,11 @@ class Device(db.Model):
     name = db.Column(db.String(30), nullable=False)
 
     condition = db.Column(db.Enum(DeviceCondition))
-    status = db.Column(db.Enum(DeviceStatus))
+    status = db.Column(
+        db.Enum(DeviceStatus), nullable=False, default=DeviceStatus.COLLECTED
+    )
+    type = db.Column(db.String(30), nullable=False)
+    defects = db.Column(db.String(80), nullable=False)
     estimated_price = db.Column(db.Float)
     admin_notes = db.Column(db.String(10000))
 
@@ -90,11 +94,13 @@ class Device(db.Model):
             "id": self.id,
             "name": self.name,
             "condition": self.condition.value if self.condition else None,
-            "status": self.status.value if self.status else None,
+            "status": self.status.value,
             "estimatedPrice": self.estimated_price,
             "adminNotes": self.admin_notes,
             "userDescription": self.user_description,
+            "type": self.type,
+            "defects": self.defects,
             "imageUrl": self.image_url,
-            "uploadDate": self.upload_date.isoformat() if self.upload_date else None,
+            "uploadDate": self.upload_date,
             "userId": self.user_id,
         }

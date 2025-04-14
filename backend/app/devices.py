@@ -49,14 +49,16 @@ def add_device():
         device_json = json.loads(form_data)
 
         name = device_json["name"]
+        type = device_json["type"]
+        defects = device_json["defects"]
         user_description = device_json["userDescription"]
         image = request.files.get("image")
 
         # Ensure required fields are present for adding a device
-        if not name or not user_description or not image:
+        if not name or not user_description or not type or not defects or not image:
             return jsonify(
                 {
-                    "error": "Missing required fields: name, user_description, or image_url"
+                    "error": "Missing required fields: name, type, defects, user_description, or image_url"
                 }
             ), 400
 
@@ -68,6 +70,8 @@ def add_device():
         # Create the device
         device = Device(
             name=name,  # type: ignore
+            type=type,  # type: ignore
+            defects=defects,  # type: ignore
             user_description=user_description,  # type: ignore
             image_url=image_url,  # type: ignore
             upload_date=datetime.now(),  # type: ignore
