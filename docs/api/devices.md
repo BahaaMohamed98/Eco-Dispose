@@ -596,8 +596,3 @@ For detailed information about error responses and HTTP status codes, refer to
 the [API Status Codes](index.md#status-codes) in the main documentation.
 
 ---
-
-<div align="center">
-  <p>Last Updated: 2025-04-13 14:57:37</p>
-  <p>© 2025 Eco-Dispose</p>
-</div>

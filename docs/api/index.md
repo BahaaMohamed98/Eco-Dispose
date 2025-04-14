@@ -6,7 +6,7 @@
   <p>
     <img src="https://img.shields.io/badge/Status-Production-brightgreen?style=flat-square" alt="Status: Production"/>
     <img src="https://img.shields.io/badge/Version-1.0-blue?style=flat-square" alt="Version: 1.0"/>
-    <img src="https://img.shields.io/badge/Updated-2025--04--13-orange?style=flat-square" alt="Updated: 2025-04-13"/>
+    <img src="https://img.shields.io/badge/Updated-2025--04--14-orange?style=flat-square" alt="Updated: 2025-04-13"/>
   </p>
 </div>
 
@@ -99,7 +99,7 @@ Example:
 The API uses conventional HTTP response codes to indicate success or failure:
 
 | Status Code | Meaning      | Description                                                       |
-|-------------|--------------|-------------------------------------------------------------------|
+| ----------- | ------------ | ----------------------------------------------------------------- |
 | 200         | OK           | Request was successful                                            |
 | 201         | Created      | Resource created successfully                                     |
 | 400         | Bad Request  | Missing or invalid parameters                                     |
@@ -128,3 +128,4 @@ The API uses conventional HTTP response codes to indicate success or failure:
 For production use, CSRF protection is implemented to prevent cross-site request forgery attacks.
 
 ---
+
