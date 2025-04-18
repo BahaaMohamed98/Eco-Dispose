@@ -25,7 +25,7 @@ def get_devices():
             # Normal user gets their own devices
             all_devices = current_user.devices
 
-        return jsonify([device.to_json() for device in all_devices])
+        return jsonify({"devices": [device.to_json() for device in all_devices]}), 200
 
     except SQLAlchemyError:
         return jsonify(
