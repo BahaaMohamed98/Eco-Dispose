@@ -426,7 +426,7 @@ function closeToast(toastId) {
       </div>
 
       <!-- Empty State -->
-      <div v-if="filteredDevices.size === 0" class="empty-state">
+      <div v-if="filteredDevices.length === 0" class="empty-state">
         <div class="text-center py-5">
           <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
           <h4>No devices found</h4>
