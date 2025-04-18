@@ -1,4 +1,4 @@
-# Eco-Dispose: E-Waste Management System
+# [Eco-Dispose: E-Waste Management System](https://bahaamohamed98.github.io/Eco-Dispose/)
 
 A full-stack application for electronic waste management and recycling, built with Vue.js and Flask.
 
@@ -29,6 +29,7 @@ Eco-Dispose/
 ## Quick Start
 
 ### Frontend Setup
+
 ```bash
 cd frontend
 
@@ -38,11 +39,12 @@ npm install
 # Build the project
 npm run build
 
-# Run the development server  
+# Run the development server
 npm run preview
 ```
 
 ### Backend Setup
+
 ```bash
 cd backend
 
@@ -56,10 +58,14 @@ pip install -r requirements.txt
 # run the server
 flask run
 ```
+
 ## Documentation
+
 - [API Documentation](docs/api/index.md)
 - [Frontend Documentation](frontend/README.md)
 - [Backend Documentation](backend/README.md)
 
 ## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.    
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
