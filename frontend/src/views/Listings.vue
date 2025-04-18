@@ -372,27 +372,27 @@ onMounted(() => {
               </div>
 
               <div class="bg-light rounded p-3 mb-4">
-                <div class="row">
-                  <div class="col-6 fw-bold">User Description</div>
-                  <div class="col-6">{{ selectedDevice.userDescription }}</div>
+                <div class="device-detail-item mb-3">
+                  <h6 class="fw-bold">User Description</h6>
+                  <p class="detail-content">
+                    {{ selectedDevice.userDescription }}
+                  </p>
                 </div>
 
-                <div class="row">
-                  <div class="col-6 fw-bold">Known defects</div>
-                  <div class="col-6">{{ selectedDevice.defects }}</div>
+                <div class="device-detail-item mb-3">
+                  <h6 class="fw-bold">Known defects</h6>
+                  <p class="detail-content">{{ selectedDevice.defects }}</p>
                 </div>
 
-                <div class="border-bottom py-2">
-                  <div class="row">
-                    <div class="col-6 fw-bold">Added On</div>
-                    <div class="col-6">{{ selectedDevice.uploadDate }}</div>
-                  </div>
+                <div class="device-detail-item border-bottom pb-3">
+                  <h6 class="fw-bold">Added On</h6>
+                  <p class="detail-content">{{ selectedDevice.uploadDate }}</p>
                 </div>
               </div>
 
-              <div class="mb-4">
+              <div v-if="selectedDevice.adminNotes" class="mb-4">
                 <h6 class="fw-bold mb-2">Technician Notes</h6>
-                <p class="text-muted">{{ selectedDevice.adminNotes }}</p>
+                <p class="detail-content">{{ selectedDevice.adminNotes }}</p>
               </div>
             </div>
           </div>
@@ -688,7 +688,26 @@ onMounted(() => {
   height: 40px;
   border-radius: 50%;
 }
+/* Device detail styling */
+.device-detail-item {
+  margin-bottom: 1rem;
+}
 
+.detail-content {
+  background-color: white;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 0;
+  border-left: 3px solid var(--bs-primary);
+  white-space: pre-line; /* Preserves line breaks */
+  word-break: break-word; /* Prevents overflow */
+}
+
+/* Optional: Add a max height with scroll for very long descriptions */
+.detail-content.long-text {
+  max-height: 150px;
+  overflow-y: auto;
+}
 /* Modal header styling */
 .modal-header {
   background-image: linear-gradient(120deg, #4361ee, #4895ef);
