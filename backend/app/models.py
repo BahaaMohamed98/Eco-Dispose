@@ -1,6 +1,7 @@
 import enum
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import select
 from werkzeug.security import check_password_hash, generate_password_hash
 
 db = SQLAlchemy()
@@ -35,7 +36,14 @@ class User(db.Model, UserMixin):
             "isAdmin": self.is_admin,
             "profileImageUrl": self.profile_image_url,
             "address": self.address.to_json(),
-            "devices": [device.to_json() for device in self.devices],  # type: ignore
+            "devices": [
+                device.to_json()
+                for device in (
+                    self.devices  # type: ignore
+                    if not self.is_admin
+                    else db.session.execute(select(Device)).scalars().all()
+                )
+            ],
         }
 
 
