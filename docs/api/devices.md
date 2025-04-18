@@ -250,7 +250,7 @@ The `device` JSON object must include:
 
 ```json
 {
-  "error": "Missing required fields: name, type, defects, user_description, or image_url"
+  "error": "Missing required fields: name, type, defects, userDescription, or image"
 }
 ```
 
@@ -386,7 +386,7 @@ Notes:
 
 ```json
 {
-  "error": "Invalid value"
+  "error": "Invalid status or condition value"
 }
 ```
 
