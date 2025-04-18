@@ -58,7 +58,7 @@ def add_device():
         if not name or not user_description or not type or not defects or not image:
             return jsonify(
                 {
-                    "error": "Missing required fields: name, type, defects, user_description, or image_url"
+                    "error": "Missing required fields: name, type, defects, userDescription, or image"
                 }
             ), 400
 
@@ -122,7 +122,7 @@ def update_device(id):
             if "status" in data:
                 device.status = DeviceStatus(data["status"])
         except ValueError:
-            return jsonify({"error": "Invalid value"}), 400
+            return jsonify({"error": "Invalid status or condition value"}), 400
         if "estimatedPrice" in data:
             device.estimated_price = float(data["estimatedPrice"])
         if "adminNotes" in data:
