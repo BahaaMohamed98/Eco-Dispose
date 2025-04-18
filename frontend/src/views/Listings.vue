@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { devicesStore } from "@/store/store.js";
+import { deviceStore } from "@/store/deviceStore.js";
 import { Modal } from "bootstrap";
 
 // Refs for modals and selected device
@@ -8,12 +8,12 @@ const selectedDeviceId = ref(null);
 const selectedDevice = ref(null);
 const toasts = ref([]);
 
-const devices = computed(() => devicesStore.devices);
+const devices = computed(() => deviceStore.devices);
 
 // Device details modal handling
 const showDeviceDetails = (deviceId) => {
   selectedDeviceId.value = deviceId;
-  selectedDevice.value = devicesStore.devices[deviceId];
+  selectedDevice.value = deviceStore.devices.get(deviceId);
 
   const modal = new Modal(document.getElementById("deviceDetailsModal"));
   modal.show();
@@ -22,7 +22,7 @@ const showDeviceDetails = (deviceId) => {
 // Tracking modal handling
 const showTracking = (deviceId) => {
   selectedDeviceId.value = deviceId;
-  selectedDevice.value = devicesStore.devices[deviceId];
+  selectedDevice.value = deviceStore.devices.get(deviceId);
 
   const modal = new Modal(document.getElementById("trackingModal"));
   modal.show();
@@ -30,34 +30,54 @@ const showTracking = (deviceId) => {
 
 // Accept offer functionality
 const acceptOffer = (deviceId) => {
-  devicesStore.devices[deviceId].status = "accepted";
+  deviceStore.devices.get(deviceId).status = "accepted";
 
   const modal = Modal.getInstance(
     document.getElementById("deviceDetailsModal"),
   );
   if (modal) modal.hide();
 
-  showNotification(
-    "Offer Accepted",
-    `You've successfully accepted the offer for your ${devicesStore.devices[deviceId].name} at $${devicesStore.devices[deviceId].estimatedPrice}.`,
-    "success",
-  );
+  deviceStore
+    .updateDevice(deviceId, deviceStore.devices.get(deviceId))
+    .then((response) => {
+      if (!response.ok) {
+        showNotification("Failed", "Failed to accept offer", "danger");
+        return;
+      }
+
+      showNotification(
+        "Offer Accepted",
+        `You've successfully accepted the offer for your ${deviceStore.devices.get(deviceId).name} at $${deviceStore.devices.get(deviceId).estimatedPrice}.`,
+        "success",
+      );
+    });
+
+  deviceStore.deleteDevice(deviceId);
 };
 
 // Reject offer functionality
 const rejectOffer = (deviceId) => {
-  devicesStore.devices[deviceId].status = "rejected";
+  deviceStore.devices.get(deviceId).status = "rejected";
 
   const modal = Modal.getInstance(
     document.getElementById("deviceDetailsModal"),
   );
   if (modal) modal.hide();
 
-  showNotification(
-    "Offer Rejected",
-    `You've rejected the offer for your ${devicesStore.devices[deviceId].name}. We'll be in touch with next steps.`,
-    "danger",
-  );
+  deviceStore
+    .updateDevice(deviceId, deviceStore.devices.get(deviceId))
+    .then((response) => {
+      if (!response.ok) {
+        showNotification("Failed", "Failed to reject offer", "danger");
+        return;
+      }
+
+      showNotification(
+        "Offer Rejected",
+        `You've rejected the offer for your ${deviceStore.devices.get(deviceId).name}. We'll be in touch with next steps.`,
+        "danger",
+      );
+    });
 };
 
 // Notification system
@@ -114,10 +134,11 @@ const getStatusClass = (status) => {
 
 const conditionBadgeClass = (condition) => {
   const map = {
-    Excellent: "bg-success text-white",
-    Good: "bg-info text-white",
-    Fair: "bg-warning text-dark",
-    Poor: "bg-danger text-white",
+    null: "",
+    excellent: "bg-success text-white",
+    good: "bg-info text-white",
+    fair: "bg-warning text-dark",
+    poor: "bg-danger text-white",
   };
   return map[condition] || "bg-secondary";
 };
@@ -210,7 +231,7 @@ onMounted(() => {
         <div class="card-list">
           <!-- Device Card for each device -->
           <div
-            v-for="(device, id) in devices"
+            v-for="[id, device] of devices"
             :key="id"
             class="card mb-3 device-card"
           >
@@ -303,7 +324,7 @@ onMounted(() => {
           <div class="row">
             <div class="col-md-5 text-center">
               <img
-                :src="devicesStore.getDeviceImage(selectedDevice)"
+                :src="deviceStore.getDeviceImage(selectedDevice)"
                 class="img-fluid rounded shadow-sm mb-3"
                 alt="Device Image"
               />
@@ -330,7 +351,7 @@ onMounted(() => {
                   class="badge rounded-pill px-3 py-2"
                   :class="conditionBadgeClass(selectedDevice.condition)"
                 >
-                  {{ selectedDevice.condition }} Condition
+                  {{ selectedDevice?.condition }} Condition
                 </span>
               </div>
             </div>
@@ -351,22 +372,27 @@ onMounted(() => {
               </div>
 
               <div class="bg-light rounded p-3 mb-4">
-                <h6 class="fw-bold mb-2">Device Specifications</h6>
-                <div
-                  v-for="(value, key) in selectedDevice.specs"
-                  :key="key"
-                  class="border-bottom py-2"
-                >
+                <div class="row">
+                  <div class="col-6 fw-bold">User Description</div>
+                  <div class="col-6">{{ selectedDevice.userDescription }}</div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6 fw-bold">Known defects</div>
+                  <div class="col-6">{{ selectedDevice.defects }}</div>
+                </div>
+
+                <div class="border-bottom py-2">
                   <div class="row">
-                    <div class="col-6 fw-bold">{{ key }}</div>
-                    <div class="col-6">{{ value }}</div>
+                    <div class="col-6 fw-bold">Added On</div>
+                    <div class="col-6">{{ selectedDevice.uploadDate }}</div>
                   </div>
                 </div>
               </div>
 
               <div class="mb-4">
                 <h6 class="fw-bold mb-2">Technician Notes</h6>
-                <p class="text-muted">{{ selectedDevice.notes }}</p>
+                <p class="text-muted">{{ selectedDevice.adminNotes }}</p>
               </div>
             </div>
           </div>

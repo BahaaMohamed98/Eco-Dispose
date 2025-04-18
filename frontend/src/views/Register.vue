@@ -1,5 +1,5 @@
 <script setup>
-import { store } from "@/store/store.js";
+import { userStore } from "@/store/userStore.js";
 import router from "@/router/routes.js";
 import { computed, ref } from "vue";
 
@@ -8,24 +8,21 @@ const lastName = ref("");
 const email = ref("");
 const password = ref("");
 
+// TODO: handle registrtion errors
 function submitForm() {
-  const response = store.register({
-    firstName: firstName.value,
-    lastName: lastName.value,
-    email: email.value,
-    password: password.value,
-    phoneNumber: "",
-    address: {
-      street: "",
-      city: "",
-      country: "",
-      zip: "",
-    },
-  });
-
-  if (response.ok) {
-    router.push({ path: "/profile/edit" });
-  }
+  userStore
+    .register({
+      firstName: firstName.value,
+      lastName: lastName.value,
+      email: email.value,
+      password: password.value,
+    })
+    .then((response) => {
+      if (response.ok) {
+        router.push({ path: "/profile/edit" });
+      }
+    })
+    .catch((e) => console.error(e));
 }
 
 const isFormInvalid = computed(

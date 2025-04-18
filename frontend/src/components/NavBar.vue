@@ -1,5 +1,5 @@
 <script setup>
-import { store } from "@/store/store.js";
+import { userStore } from "@/store/userStore.js";
 import { links } from "@/store/links.js";
 import router from "@/router/routes.js";
 import { ref } from "vue";
@@ -7,7 +7,7 @@ import { ref } from "vue";
 const navBarExpanded = ref(false);
 
 function logout() {
-  store.logout();
+  userStore.logout();
   router.push({ path: "/login" });
 }
 </script>
@@ -47,8 +47,10 @@ function logout() {
           </li>
         </ul>
 
+        <div v-if="userStore.isLoading"></div>
+
         <!-- login and register buttons -->
-        <div v-if="!store.currentUser" class="ms-auto">
+        <div v-else-if="!userStore.currentUser" class="ms-auto">
           <router-link to="/login" class="btn btn-primary me-2">
             <i class="fa-solid fa-right-to-bracket"></i> Login
           </router-link>
@@ -61,7 +63,7 @@ function logout() {
           <!-- profile picture -->
           <router-link to="/profile" class="mx-2">
             <img
-              :src="store.getProfileImage()"
+              :src="userStore.getProfileImage()"
               alt="Profile"
               class="profile-pic rounded-circle"
           /></router-link>
@@ -79,17 +81,17 @@ function logout() {
           </a>
           <!-- drop down options -->
           <ul class="dropdown-menu dropdown-menu-end">
-            <li v-if="!store.currentUser.isAdmin">
+            <li v-if="!userStore.currentUser.isAdmin">
               <router-link to="/list" class="dropdown-item"
                 ><i class="fa-solid fa-list-ul"></i> Listed Devices
               </router-link>
             </li>
-            <li v-if="!store.currentUser.isAdmin">
+            <li v-if="!userStore.currentUser.isAdmin">
               <router-link to="/upload" class="dropdown-item"
                 ><i class="fa-solid fa-arrow-up-from-bracket"></i> Upload Device
               </router-link>
             </li>
-            <li v-if="store.currentUser.isAdmin">
+            <li v-if="userStore.currentUser.isAdmin">
               <router-link to="/admin" class="dropdown-item"
                 ><i class="fa-solid fa-user-tie"></i> Admin Dashboard
               </router-link>

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import { store } from "@/store/store.js";
+import { userStore } from "@/store/userStore.js";
 import router from "@/router/routes.js";
 
 const email = ref("");
@@ -8,16 +8,21 @@ const password = ref("");
 const invalidCredentials = ref(false);
 
 function submitForm() {
-  const response = store.login(email.value, password.value);
-  if (response.ok) {
-    if (store.currentUser.isAdmin) {
-      router.push({ path: "/admin" });
-    } else {
-      router.push({ path: "/profile" });
-    }
-  } else {
-    invalidCredentials.value = true;
-  }
+  userStore
+    .login(email.value, password.value)
+    .then((response) => {
+      if (!response.ok) {
+        invalidCredentials.value = true;
+        return;
+      }
+
+      if (userStore.currentUser.isAdmin) {
+        router.push({ path: "/admin" });
+      } else {
+        router.push({ path: "/profile" });
+      }
+    })
+    .catch((e) => console.error(e));
 }
 
 const isFormInvalid = computed(() => !email.value || !password.value);

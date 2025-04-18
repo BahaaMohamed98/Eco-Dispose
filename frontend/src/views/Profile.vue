@@ -1,21 +1,25 @@
 <script setup>
 import { computed } from "vue";
-import { store } from "@/store/store.js";
+import { userStore } from "@/store/userStore.js";
 
 const address = computed(() => {
-  const userAddress = store.currentUser?.address;
+  const userAddress = userStore.currentUser?.address;
   let address = "";
 
   if (userAddress?.street) {
-    address += userAddress.street + ", ";
+    address += userAddress.street;
   }
 
   if (userAddress?.city) {
-    address += userAddress.city + ", ";
+    address += ", " + userAddress.city;
   }
 
   if (userAddress?.country) {
-    address += userAddress.country;
+    address += ", " + userAddress.country;
+  }
+
+  if (userAddress?.zipCode) {
+    address += ", " + userAddress.zipCode;
   }
 
   return address;
@@ -39,7 +43,7 @@ const address = computed(() => {
           <!-- profile photo-->
           <div class="profile-image-container">
             <img
-              :src="store.getProfileImage()"
+              :src="userStore.getProfileImage()"
               alt="Profile Image"
               style="
                 width: 100%;
@@ -51,10 +55,12 @@ const address = computed(() => {
           </div>
 
           <h2 class="username">
-            {{ `${store.currentUser.firstName} ${store.currentUser.lastName}` }}
+            {{
+              `${userStore.currentUser.firstName} ${userStore.currentUser.lastName}`
+            }}
           </h2>
           <div class="admin-badge">
-            <div v-if="store.currentUser.isAdmin">
+            <div v-if="userStore.currentUser.isAdmin">
               <span class="crown-icon">👑</span>
               <span>Admin</span>
             </div>
@@ -83,22 +89,26 @@ const address = computed(() => {
           <div class="profile-fields">
             <div class="field-group">
               <div class="field-label">First Name</div>
-              <div class="field-value">{{ store.currentUser.firstName }}</div>
+              <div class="field-value">
+                {{ userStore.currentUser.firstName }}
+              </div>
             </div>
             <div class="field-group">
               <div class="field-label">Last Name</div>
-              <div class="field-value">{{ store.currentUser.lastName }}</div>
+              <div class="field-value">
+                {{ userStore.currentUser.lastName }}
+              </div>
             </div>
             <div class="field-group">
               <div class="field-label">Role</div>
               <div class="field-value">
-                {{ store.currentUser.isAdmin ? "Administrator" : "User" }}
+                {{ userStore.currentUser.isAdmin ? "Administrator" : "User" }}
               </div>
             </div>
             <div class="field-group">
               <div class="field-label">Phone Number</div>
               <div class="field-value">
-                {{ store.currentUser?.phoneNumber }}
+                {{ userStore.currentUser?.phoneNumber }}
               </div>
             </div>
             <div class="field-group">

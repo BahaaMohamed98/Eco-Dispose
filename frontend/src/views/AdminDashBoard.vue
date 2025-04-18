@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
-import { devicesStore } from "@/store/store.js";
+import { deviceStore } from "@/store/deviceStore.js";
 
 // UI state
 const searchQuery = ref("");
@@ -10,23 +10,9 @@ const currentPage = ref(1);
 const itemsPerPage = ref(6);
 const toasts = ref([]);
 
-// Get devices as array with IDs
-const devicesArray = computed(() => {
-  return Object.entries(devicesStore.devices).map(([id, device]) => ({
-    id,
-    ...device,
-    // Ensure estimatedPrice and notes fields exist for editing
-    estimatedPrice: device.estimatedPrice || "",
-    notes: device.notes || "",
-    queryId:
-      device.queryId ||
-      `query-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-  }));
-});
-
 // Filter devices based on search and filters
 const filteredDevices = computed(() => {
-  let result = devicesArray.value;
+  let result = Array.from(deviceStore.devices.values());
 
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
@@ -57,13 +43,13 @@ const filteredDevices = computed(() => {
 
 // Calculate total pages for pagination
 const totalPages = computed(() => {
-  const filteredCount = Object.values(devicesStore.devices).length;
+  const filteredCount = Object.values(deviceStore.devices).length;
   return Math.ceil(filteredCount / itemsPerPage.value) || 1;
 });
 
 // Send offer to user
 function sendOffer(deviceId) {
-  const device = devicesStore.devices[deviceId];
+  const device = deviceStore.devices.get(deviceId);
 
   if (!device.estimatedPrice || device.estimatedPrice <= 0) {
     showNotification(
@@ -74,7 +60,7 @@ function sendOffer(deviceId) {
     return;
   }
 
-  if (!device.notes) {
+  if (!device.adminNotes) {
     showNotification(
       "Validation Error",
       "Please add evaluation notes before sending the offer.",
@@ -83,36 +69,23 @@ function sendOffer(deviceId) {
     return;
   }
 
-  // Update status to evaluated (offer sent)
-  devicesStore.updateDeviceStatus(deviceId, "evaluated");
+  device.status = "evaluated";
 
-  // Show notification ONLY when offer is sent
-  showNotification(
-    "Offer Sent",
-    `An offer of $${device.estimatedPrice} has been sent for ${device.name}.`,
-    "success",
-  );
-}
+  deviceStore
+    .updateDevice(deviceId, device)
+    .then((response) => {
+      if (!response.ok) {
+        showNotification("Failed", "Failed to send offer", "danger");
+        return;
+      }
 
-// Update device price
-function updateDevicePrice(deviceId, price) {
-  if (devicesStore.devices[deviceId]) {
-    devicesStore.devices[deviceId].estimatedPrice = price;
-  }
-}
-
-// Update device notes
-function updateDeviceNotes(deviceId, notes) {
-  if (devicesStore.devices[deviceId]) {
-    devicesStore.devices[deviceId].notes = notes;
-  }
-}
-
-// Update device condition
-function updateDeviceCondition(deviceId, condition) {
-  if (devicesStore.devices[deviceId]) {
-    devicesStore.devices[deviceId].condition = condition;
-  }
+      showNotification(
+        "Offer Sent",
+        `An offer of $${device.estimatedPrice} has been sent for ${device.name}.`,
+        "success",
+      );
+    })
+    .catch((e) => console.error(e));
 }
 
 // Filter methods
@@ -136,7 +109,18 @@ function changePage(page) {
 
 // Refresh devices
 function refreshDevices() {
-  showNotification("Data Refreshed", "Device data has been refreshed.", "info");
+  deviceStore
+    .refreshDevices()
+    .then((response) => {
+      if (response.ok) {
+        showNotification(
+          "Data Refreshed",
+          "Device data has been refreshed.",
+          "info",
+        );
+      }
+    })
+    .catch((e) => console.error(e));
 }
 
 // Helper methods
@@ -163,11 +147,14 @@ function getStatusText(status) {
 }
 
 function getConditionClass(condition) {
+  if (!condition) {
+    return "";
+  }
   const conditionMap = {
-    Excellent: "condition-excellent",
-    Good: "condition-good",
-    Fair: "condition-fair",
-    Poor: "condition-poor",
+    excellent: "condition-excellent",
+    good: "condition-good",
+    fair: "condition-fair",
+    poor: "condition-poor",
   };
   return conditionMap[condition] || "";
 }
@@ -185,15 +172,7 @@ function showNotification(title, message, type) {
   toasts.value.push(toast);
 
   // Auto-hide after 5 seconds
-  setTimeout(() => {
-    const index = toasts.value.findIndex((t) => t.id === toast.id);
-    if (index !== -1) {
-      toasts.value[index].visible = false;
-      setTimeout(() => {
-        toasts.value = toasts.value.filter((t) => t.id !== toast.id);
-      }, 500);
-    }
-  }, 5000);
+  setTimeout(() => closeToast(toast.id), 5000);
 }
 
 // Close toast manually
@@ -268,10 +247,10 @@ function closeToast(toastId) {
               @change="applyFilters"
             >
               <option value="">All Conditions</option>
-              <option value="Excellent">Excellent</option>
-              <option value="Good">Good</option>
-              <option value="Fair">Fair</option>
-              <option value="Poor">Poor</option>
+              <option value="excellent">Excellent</option>
+              <option value="good">Good</option>
+              <option value="fair">Fair</option>
+              <option value="poor">Poor</option>
             </select>
           </div>
           <div class="col-md-2">
@@ -311,7 +290,7 @@ function closeToast(toastId) {
             <!-- Device Image -->
             <div class="card-img-container">
               <img
-                :src="devicesStore.getDeviceImage(device)"
+                :src="deviceStore.getDeviceImage(device)"
                 :alt="device.name"
                 class="device-image"
               />
@@ -319,19 +298,6 @@ function closeToast(toastId) {
 
             <!-- Card Body with Device Details -->
             <div class="card-body d-flex flex-column">
-              <!-- Device Specifications -->
-              <div class="device-specs mt-3" v-if="device.specs">
-                <h5 class="fw-bold mb-3">Specifications</h5>
-                <div
-                  class="spec-item"
-                  v-for="(value, key) in device.specs"
-                  :key="key"
-                >
-                  <span class="spec-label">{{ key }}</span>
-                  <span class="spec-value">{{ value }}</span>
-                </div>
-              </div>
-
               <div class="description-notes-container">
                 <!-- User Description Section -->
                 <div class="my-3">
@@ -345,7 +311,7 @@ function closeToast(toastId) {
                   </div>
                   <div class="user-description p-3 bg-light border rounded">
                     <p class="mb-0 text-muted">
-                      {{ device.description || "No description provided" }}
+                      {{ device.userDescription || "No description provided" }}
                     </p>
                   </div>
                 </div>
@@ -361,14 +327,13 @@ function closeToast(toastId) {
                   </div>
                   <textarea
                     class="form-control"
-                    v-model="device.notes"
+                    v-model="device.adminNotes"
                     rows="3"
                     placeholder="Add your evaluation notes about this device..."
                     :disabled="
                       device.status === 'evaluated' ||
                       device.status === 'accepted'
                     "
-                    @change="updateDeviceNotes(device.id, device.notes)"
                   ></textarea>
                 </div>
               </div>
@@ -401,9 +366,6 @@ function closeToast(toastId) {
                     class="form-control"
                     placeholder="Enter price offer"
                     v-model="device.estimatedPrice"
-                    @change="
-                      updateDevicePrice(device.id, device.estimatedPrice)
-                    "
                   />
                 </div>
 
@@ -422,16 +384,12 @@ function closeToast(toastId) {
                 "
               >
                 <label class="form-label fw-bold">Device Condition</label>
-                <select
-                  class="form-select"
-                  v-model="device.condition"
-                  @change="updateDeviceCondition(device.id, device.condition)"
-                >
-                  <option value="">Select condition...</option>
-                  <option value="Excellent">Excellent</option>
-                  <option value="Good">Good</option>
-                  <option value="Fair">Fair</option>
-                  <option value="Poor">Poor</option>
+                <select class="form-select" v-model="device.condition">
+                  <option value="null">Select condition...</option>
+                  <option value="excellent">excellent</option>
+                  <option value="good">good</option>
+                  <option value="fair">fair</option>
+                  <option value="poor">poor</option>
                 </select>
               </div>
               <div class="mt-3" v-else>
@@ -441,7 +399,7 @@ function closeToast(toastId) {
                     class="condition-badge"
                     :class="getConditionClass(device.condition)"
                   >
-                    {{ device.condition }}
+                    {{ device?.condition }}
                   </span>
                 </div>
               </div>
@@ -468,7 +426,7 @@ function closeToast(toastId) {
       </div>
 
       <!-- Empty State -->
-      <div v-if="filteredDevices.length === 0" class="empty-state">
+      <div v-if="filteredDevices.size === 0" class="empty-state">
         <div class="text-center py-5">
           <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
           <h4>No devices found</h4>

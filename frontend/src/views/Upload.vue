@@ -1,18 +1,18 @@
 <script setup>
 import { computed, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { devicesStore } from "@/store/store.js";
+import { deviceStore } from "@/store/deviceStore.js";
 
 const router = useRouter();
 
 // Form data with a reactive object
-const deviceForm = reactive({
+const device = reactive({
   name: "",
   type: "",
-  description: "",
-  images: [],
+  userDescription: "",
   defects: "",
 });
+const imageFile = ref(null);
 
 // Form validation
 const errors = ref({});
@@ -29,14 +29,15 @@ const onFileDrop = (event) => {
   if (files.length) {
     // Process the dropped files
     imagePreview.value = [];
-    deviceForm.images = [];
+    imageFile.value = null;
 
     Array.from(files).forEach((file) => {
       if (file.type.startsWith("image/")) {
+        imageFile.value = file;
+
         const reader = new FileReader();
         reader.onload = (e) => {
           imagePreview.value.push(e.target.result);
-          deviceForm.images.push(file);
         };
         reader.readAsDataURL(file);
       }
@@ -46,9 +47,9 @@ const onFileDrop = (event) => {
 
 const isFormValid = computed(() => {
   return (
-    deviceForm.name &&
-    deviceForm.type &&
-    deviceForm.description &&
+    device.name &&
+    device.type &&
+    device.userDescription &&
     imagePreview.value.length > 0
   );
 });
@@ -60,14 +61,15 @@ const handleFileUpload = (event) => {
 
   // Clear previous previews
   imagePreview.value = [];
-  deviceForm.images = [];
+  imageFile.value = null;
 
   // Process each file
   Array.from(files).forEach((file) => {
+    imageFile.value = file;
+
     const reader = new FileReader();
     reader.onload = (e) => {
       imagePreview.value.push(e.target.result);
-      deviceForm.images.push(file);
     };
     reader.readAsDataURL(file);
   });
@@ -81,23 +83,7 @@ const submitDevice = async () => {
   errors.value = {};
 
   try {
-    // Create a new device object
-    const newDeviceId = `device_${Date.now()}`;
-
-    // Add to store
-    devicesStore.devices[newDeviceId] = {
-      name: deviceForm.name,
-      condition: "",
-      estimatedPrice: null, // Will be set after evaluation
-      status: "waiting",
-      specs: {
-        Type: deviceForm.type,
-        "Added On": new Date().toLocaleDateString(),
-        "Known Defects": deviceForm.defects || "None reported",
-      },
-      image: imagePreview.value[0], // Use first image as the main image
-      description: deviceForm.description,
-    };
+    await deviceStore.addDevice(device.id, device, imageFile.value);
 
     // Redirect with a success message
     await router.push("/list");
@@ -112,7 +98,7 @@ const submitDevice = async () => {
 // Remove preview image
 const removeImage = (index) => {
   imagePreview.value.splice(index, 1);
-  deviceForm.images.splice(index, 1);
+  imageFile.value = null;
 };
 </script>
 
@@ -149,7 +135,7 @@ const removeImage = (index) => {
             <!-- Name field -->
             <div class="mb-4 form-floating">
               <input
-                v-model="deviceForm.name"
+                v-model="device.name"
                 type="text"
                 class="form-control"
                 id="deviceName"
@@ -164,7 +150,7 @@ const removeImage = (index) => {
             <!-- Type field -->
             <div class="mb-4 form-floating">
               <input
-                v-model="deviceForm.type"
+                v-model="device.type"
                 type="text"
                 class="form-control"
                 id="deviceType"
@@ -183,7 +169,7 @@ const removeImage = (index) => {
               <div class="col-12">
                 <div class="form-floating">
                   <input
-                    v-model="deviceForm.defects"
+                    v-model="device.defects"
                     type="text"
                     class="form-control"
                     id="deviceDefects"
@@ -200,7 +186,7 @@ const removeImage = (index) => {
             <!-- Description field -->
             <div class="mb-4 form-floating">
               <textarea
-                v-model="deviceForm.description"
+                v-model="device.userDescription"
                 class="form-control"
                 id="deviceDescription"
                 style="height: 120px"

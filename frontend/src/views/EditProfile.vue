@@ -1,20 +1,22 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { store } from "@/store/store.js";
+import { userStore } from "@/store/userStore.js";
 
 const router = useRouter();
 
 // Form data initialized with current user
-const user = ref(store.currentUser);
-
+const user = ref(userStore.currentUser);
 const profileImage = ref(null);
+const profileImageFile = ref(null);
 const isSubmitting = ref(false);
 
 // Handle image upload
 function handleImageUpload(event) {
   const file = event.target.files[0];
   if (file) {
+    profileImageFile.value = file;
+
     const reader = new FileReader();
     reader.onload = (e) => {
       profileImage.value = e.target.result;
@@ -26,6 +28,8 @@ function handleImageUpload(event) {
 // Remove profile image
 function removeImage() {
   profileImage.value = null;
+  profileImageFile.value = null;
+
   const fileInput = document.getElementById("imageUpload");
   if (fileInput) fileInput.value = "";
 }
@@ -36,14 +40,9 @@ function updateProfile() {
   // some artificial delay
   setTimeout(() => {
     // Update user data in store using the new function
-    if (store.currentUser) {
-      // Save image if it changed
-      if (profileImage.value) {
-        user.value.profileImage = profileImage;
-      }
-
+    if (userStore.currentUser) {
       // Save profile data
-      store.updateProfile(user.value);
+      userStore.updateProfile(user.value, profileImageFile.value);
 
       // Navigate back to profile page
       gotoProfile();
@@ -77,7 +76,7 @@ function gotoProfile() {
             <div class="profile-image-container mb-3">
               <!-- Update the image source in the template -->
               <img
-                :src="profileImage || store.getProfileImage()"
+                :src="profileImage || userStore.getProfileImage()"
                 alt="Profile"
                 class="profile-image"
               />
@@ -201,7 +200,7 @@ function gotoProfile() {
                     <i class="fas fa-globe text-primary"></i>
                   </span>
                   <select v-model="user.address.country" class="form-select">
-                    <option value="" disabled>Select country</option>
+                    <option value="null" disabled>Select country</option>
                     <option value="Egypt">Egypt</option>
                     <option value="USA">United States</option>
                     <option value="UK">United Kingdom</option>
@@ -217,7 +216,7 @@ function gotoProfile() {
                     <i class="fas fa-map-pin text-primary"></i>
                   </span>
                   <input
-                    v-model="user.address.zip"
+                    v-model="user.address.zipCode"
                     type="text"
                     class="form-control"
                     placeholder="Enter postal code"

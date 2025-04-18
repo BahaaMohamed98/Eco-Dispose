@@ -1,5 +1,5 @@
 <script setup>
-import { store } from "@/store/store.js";
+import { userStore } from "@/store/userStore.js";
 </script>
 
 <template>
@@ -27,19 +27,19 @@ import { store } from "@/store/store.js";
       <div class="d-grid gap-2 d-md-flex justify-content-center my-3">
         <!-- login and register buttons -->
         <router-link
-          v-if="!store.currentUser"
+          v-if="!userStore.currentUser"
           to="/login"
           class="btn btn-lg btn-primary fw-bold"
           ><i class="fa-solid fa-right-to-bracket"></i> Login
         </router-link>
         <router-link
-          v-if="!store.currentUser"
+          v-if="!userStore.currentUser"
           to="/register"
           class="btn btn-lg btn-outline-primary fw-bold"
           ><i class="fa-solid fa-user-plus"></i> Register
         </router-link>
         <router-link
-          v-if="store.currentUser"
+          v-if="userStore.currentUser"
           to="/upload"
           class="btn btn-lg btn-primary fw-bold"
           ><i class="fa-solid fa-arrow-up-from-bracket"></i> Upload Now
@@ -86,10 +86,7 @@ import { store } from "@/store/store.js";
         </div>
 
         <div class="card myCard rounded shadow-sm">
-          <img
-            src="@/assets/laptops.png"
-            class="card-img-top rounded h-100"
-          />
+          <img src="@/assets/laptops.png" class="card-img-top rounded h-100" />
           <div class="card-body">
             <h4 class="fw-bold card-title">Laptops & Tablets</h4>
             <p class="card-text">

@@ -9,7 +9,7 @@ import Upload from "@/views/Upload.vue";
 import AdminDashBoard from "@/views/AdminDashBoard.vue";
 import Listings from "@/views/Listings.vue";
 import NotFound from "@/views/NotFound.vue";
-import { store } from "@/store/store.js";
+import { userStore } from "@/store/userStore.js";
 
 const routes = [
   { path: "/", redirect: "/home" },
@@ -43,14 +43,18 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+  if (userStore.isLoading) {
+    await userStore.checkAuth();
+  }
+
   if (
     (to.meta.requiresAuth || to.meta.requiresUser || to.meta.requiresAdmin) &&
-    !store.currentUser
+    !userStore.currentUser
   ) {
     next({ path: "/login" });
-  } else if (to.meta.requiresGuest && store.currentUser) {
+  } else if (to.meta.requiresGuest && userStore.currentUser) {
     next({ path: "/profile" });
-  } else if (to.meta.requiresAdmin && !store.currentUser.isAdmin) {
+  } else if (to.meta.requiresAdmin && !userStore.currentUser.isAdmin) {
     next({ path: "/home" });
   } else {
     next();
