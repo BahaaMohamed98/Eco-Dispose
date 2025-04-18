@@ -1,12 +1,9 @@
-import os
-
 from flask import Blueprint, json, jsonify, request
 from flask_login import current_user, login_required
 from datetime import datetime
 from sqlalchemy.exc import SQLAlchemyError
 
-from .config import UPLOAD_FOLDER_PATH
-from .util import save_file
+from .util import delete_file, save_file
 
 from .models import Device, db, DeviceCondition, DeviceStatus
 
@@ -162,11 +159,7 @@ def delete_device(id):
         # delete device's stored image
         if device.image_url:
             # Extract filename from the url
-            filename = os.path.basename(device.image_url)
-            file_path = os.path.join(UPLOAD_FOLDER_PATH, filename)
-
-            if os.path.exists(file_path):
-                os.remove(file_path)
+            delete_file(device.image_url)
 
         return jsonify({"message": "Device deleted successfully"}), 200
 

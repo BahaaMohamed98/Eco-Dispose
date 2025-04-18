@@ -1,7 +1,7 @@
 import os
 import uuid
 from werkzeug.utils import secure_filename
-from .config import ALLOWED_EXTENSIONS, UPLOAD_FOLDER_PATH, UPLOAD_FOLDER
+from .config import ALLOWED_EXTENSIONS, BASE_DIR, UPLOAD_FOLDER_PATH, UPLOAD_FOLDER
 
 
 def get_extension(filename):
@@ -26,3 +26,10 @@ def save_file(file):
     file_path = "/" + os.path.join(UPLOAD_FOLDER, filename)  # relative file path
     file.save(os.path.join(UPLOAD_FOLDER_PATH, filename))
     return file_path
+
+
+def delete_file(filename):
+    file_path = os.path.join(BASE_DIR, filename[1:])
+
+    if os.path.exists(file_path):
+        os.remove(file_path)

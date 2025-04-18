@@ -10,7 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from .models import Address, User, db
-from .util import save_file
+from .util import delete_file, save_file
 
 auth = Blueprint("auth", __name__)
 login_manager = LoginManager()
@@ -133,6 +133,9 @@ def edit():
                 current_user.address.zip_code = user_address["zipCode"]
 
         if image:
+            if "profileImageUrl" in user:
+                delete_file(user["profileImageUrl"])
+
             file_path = save_file(image)
             current_user.profile_image_url = file_path
 
