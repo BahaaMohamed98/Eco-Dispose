@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     phone_number = db.Column(db.String(30))
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     profile_image_url = db.Column(db.String(80))
-    address_id = db.Column(db.Integer, db.ForeignKey("address.id"))
+    address_id = db.Column(db.Integer, db.ForeignKey("address.id"), nullable=False)
     address = db.relationship("Address", backref="user")
     devices = db.relationship("Device", backref="user")
 
@@ -89,8 +89,8 @@ class Device(db.Model):
     )
     type = db.Column(db.String(30), nullable=False)
     defects = db.Column(db.String(80), nullable=False)
-    estimated_price = db.Column(db.Float)
-    admin_notes = db.Column(db.String(10000))
+    estimated_price = db.Column(db.Float, nullable=False, default=0)
+    admin_notes = db.Column(db.String(10000), nullable=False, default="")
 
     user_description = db.Column(db.String(10000), nullable=False)
     image_url = db.Column(db.String(80), nullable=False)
