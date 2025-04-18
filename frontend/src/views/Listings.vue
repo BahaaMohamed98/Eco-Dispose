@@ -220,9 +220,24 @@ onMounted(() => {
       </div>
     </div>
   </div>
+  <!-- Empty State when no devices are present -->
+  <div v-if="devices.size === 0" class="container my-5">
+    <div class="empty-state">
+      <div class="text-center py-5">
+        <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+        <h4>No devices found</h4>
+        <p class="text-muted">
+          You haven't submitted any devices for recycling yet
+        </p>
+        <router-link to="/upload" class="btn btn-primary">
+          <i class="fas fa-upload me-2"></i>Upload New Device
+        </router-link>
+      </div>
+    </div>
+  </div>
 
   <!-- Devices List with Status -->
-  <div class="container my-5">
+  <div v-else class="container my-5">
     <h2 class="fw-bold text-center text-primary mb-4 section-header">
       Your Devices
     </h2>
@@ -755,5 +770,12 @@ onMounted(() => {
   .step-icon {
     margin: 0 15px 0 0;
   }
+}
+
+.empty-state {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  padding: 3rem 1rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 }
 </style>
