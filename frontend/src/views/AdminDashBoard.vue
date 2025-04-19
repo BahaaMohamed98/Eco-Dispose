@@ -2,6 +2,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { deviceStore } from "@/store/deviceStore.js";
+import { toastStore } from "@/store/toastStore.js";
 
 // UI state
 const searchQuery = ref("");
@@ -9,7 +10,6 @@ const statusFilter = ref("");
 const conditionFilter = ref("");
 const currentPage = ref(1);
 const itemsPerPage = ref(6);
-const toasts = ref([]);
 
 // Filter devices based on search and filters
 const filteredDevices = computed(() => {
@@ -53,7 +53,7 @@ function sendOffer(deviceId) {
   const device = deviceStore.devices.get(deviceId);
 
   if (!device.estimatedPrice || device.estimatedPrice <= 0) {
-    showNotification(
+    toastStore.showToast(
       "Validation Error",
       "Please enter a valid price for the offer.",
       "danger",
@@ -62,7 +62,7 @@ function sendOffer(deviceId) {
   }
 
   if (!device.adminNotes) {
-    showNotification(
+    toastStore.showToast(
       "Validation Error",
       "Please add evaluation notes before sending the offer.",
       "danger",
@@ -76,11 +76,11 @@ function sendOffer(deviceId) {
     .updateDevice(deviceId, device)
     .then((response) => {
       if (!response.ok) {
-        showNotification("Failed", "Failed to send offer", "danger");
+        toastStore.showToast("Failed", "Failed to send offer", "danger");
         return;
       }
 
-      showNotification(
+      toastStore.showToast(
         "Offer Sent",
         `An offer of $${device.estimatedPrice} has been sent for ${device.name}.`,
         "success",
@@ -114,7 +114,7 @@ function refreshDevices() {
     .refreshDevices()
     .then((response) => {
       if (response.ok) {
-        showNotification(
+        toastStore.showToast(
           "Data Refreshed",
           "Device data has been refreshed.",
           "info",
@@ -158,33 +158,6 @@ function getConditionClass(condition) {
     poor: "condition-poor",
   };
   return conditionMap[condition] || "";
-}
-
-// Show notification toast
-function showNotification(title, message, type) {
-  const toast = {
-    id: Date.now(),
-    title,
-    message,
-    type,
-    visible: true,
-  };
-
-  toasts.value.push(toast);
-
-  // Auto-hide after 5 seconds
-  setTimeout(() => closeToast(toast.id), 5000);
-}
-
-// Close toast manually
-function closeToast(toastId) {
-  const index = toasts.value.findIndex((t) => t.id === toastId);
-  if (index !== -1) {
-    toasts.value[index].visible = false;
-    setTimeout(() => {
-      toasts.value = toasts.value.filter((t) => t.id !== toastId);
-    }, 500);
-  }
 }
 </script>
 
@@ -477,31 +450,6 @@ function closeToast(toastId) {
         </nav>
       </div>
     </div>
-
-    <!-- Toast Container for Notifications -->
-    <div class="toast-container">
-      <div
-        v-for="toast in toasts"
-        :key="toast.id"
-        class="toast"
-        :class="{ show: toast.visible }"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-      >
-        <div class="toast-header" :class="'bg-' + toast.type + ' text-white'">
-          <strong class="me-auto">{{ toast.title }}</strong>
-          <button
-            type="button"
-            class="btn-close btn-close-white"
-            @click="closeToast(toast.id)"
-          ></button>
-        </div>
-        <div class="toast-body">
-          {{ toast.message }}
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -568,28 +516,6 @@ function closeToast(toastId) {
   padding: 0.4rem 0.8rem;
   border-radius: 1rem;
   font-weight: 600;
-}
-
-.toast-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1060;
-}
-
-.toast {
-  min-width: 300px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-  opacity: 0;
-  transform: translateY(-20px);
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .page-link {

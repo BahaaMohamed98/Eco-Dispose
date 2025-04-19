@@ -1,6 +1,7 @@
 <script setup>
 import NavBar from "@/components/NavBar.vue";
 import Footer from "@/components/Footer.vue";
+import ToastContainer from "@/components/ToastContainer.vue";
 import router from "@/router/routes.js";
 import { computed } from "vue";
 
@@ -12,9 +13,11 @@ const renderFooter = computed(
 </script>
 
 <template>
+  <ToastContainer></ToastContainer>
+
   <NavBar></NavBar>
 
-  <router-view></router-view>
+  <RouterView></RouterView>
 
   <Footer v-if="renderFooter"></Footer>
 </template>

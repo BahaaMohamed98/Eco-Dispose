@@ -2,11 +2,11 @@
 import { ref, onMounted, computed } from "vue";
 import { deviceStore } from "@/store/deviceStore.js";
 import { Modal } from "bootstrap";
+import { toastStore } from "@/store/toastStore.js";
 
 // Refs for modals and selected device
 const selectedDeviceId = ref(null);
 const selectedDevice = ref(null);
-const toasts = ref([]);
 
 const devices = computed(() => deviceStore.devices);
 
@@ -41,16 +41,21 @@ const acceptOffer = (deviceId) => {
     .updateDevice(deviceId, deviceStore.devices.get(deviceId))
     .then((response) => {
       if (!response.ok) {
-        showNotification("Failed", "Failed to accept offer", "danger");
+        toastStore.showToast(
+          "Failed",
+          "Failed to accept offer",
+          "danger",
+        );
         return;
       }
 
-      showNotification(
+      toastStore.showToast(
         "Offer Accepted",
         `You've successfully accepted the offer for your ${deviceStore.devices.get(deviceId).name} at $${deviceStore.devices.get(deviceId).estimatedPrice}.`,
         "success",
       );
-    });
+    })
+    .catch((e) => console.error(e));
 
   deviceStore.deleteDevice(deviceId);
 };
@@ -68,49 +73,21 @@ const rejectOffer = (deviceId) => {
     .updateDevice(deviceId, deviceStore.devices.get(deviceId))
     .then((response) => {
       if (!response.ok) {
-        showNotification("Failed", "Failed to reject offer", "danger");
+        toastStore.showToast(
+          "Failed",
+          "Failed to reject offer",
+          "danger",
+        );
         return;
       }
 
-      showNotification(
+      toastStore.showToast(
         "Offer Rejected",
         `You've rejected the offer for your ${deviceStore.devices.get(deviceId).name}. We'll be in touch with next steps.`,
         "danger",
       );
-    });
-};
-
-// Notification system
-const showNotification = (title, message, type) => {
-  const toast = {
-    id: Date.now(),
-    title,
-    message,
-    type,
-    visible: true,
-  };
-
-  toasts.value.push(toast);
-
-  setTimeout(() => {
-    const index = toasts.value.findIndex((t) => t.id === toast.id);
-    if (index !== -1) {
-      toasts.value[index].visible = false;
-      setTimeout(() => {
-        toasts.value = toasts.value.filter((t) => t.id !== toast.id);
-      }, 500);
-    }
-  }, 5000);
-};
-
-const closeToast = (toastId) => {
-  const index = toasts.value.findIndex((t) => t.id === toastId);
-  if (index !== -1) {
-    toasts.value[index].visible = false;
-    setTimeout(() => {
-      toasts.value = toasts.value.filter((t) => t.id !== toastId);
-    }, 500);
-  }
+    })
+    .catch((e) => console.error(e));
 };
 
 // Helper methods
@@ -540,38 +517,6 @@ onMounted(() => {
             <i class="fas fa-times me-1"></i> Close
           </button>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toast Container for Notifications -->
-  <div class="toast-container position-fixed top-0 end-0 p-3">
-    <div
-      v-for="toast in toasts"
-      :key="toast.id"
-      class="toast show"
-      :class="{ show: toast.visible }"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
-      <div class="toast-header" :class="'bg-' + toast.type + ' text-white'">
-        <i
-          :class="
-            toast.type === 'success'
-              ? 'fas fa-check-circle me-2'
-              : 'fas fa-exclamation-circle me-2'
-          "
-        ></i>
-        <strong class="me-auto">{{ toast.title }}</strong>
-        <button
-          type="button"
-          class="btn-close btn-close-white"
-          @click="closeToast(toast.id)"
-        ></button>
-      </div>
-      <div class="toast-body">
-        {{ toast.message }}
       </div>
     </div>
   </div>
