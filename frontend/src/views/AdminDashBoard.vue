@@ -70,6 +70,15 @@ function sendOffer(deviceId) {
     return;
   }
 
+  if (!device.condition) {
+    toastStore.showToast(
+      "Validation Error",
+      "Please select device condition before sending the offer.",
+      "danger",
+    );
+    return;
+  }
+
   device.status = "evaluated";
 
   deviceStore
