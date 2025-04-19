@@ -404,7 +404,7 @@ import { userStore } from "@/store/userStore.js";
   transition: all 0.3s ease;
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
   .social-links {
     margin-top: 2rem;
   }

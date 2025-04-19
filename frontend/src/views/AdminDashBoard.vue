@@ -1,3 +1,4 @@
+<!--suppress CssUnusedSymbol -->
 <script setup>
 import { ref, computed } from "vue";
 import { deviceStore } from "@/store/deviceStore.js";
@@ -569,33 +570,6 @@ function closeToast(toastId) {
   font-weight: 600;
 }
 
-.device-specs {
-  background-color: #f8f9fa;
-  border-radius: 0.5rem;
-  padding: 1rem;
-}
-
-.spec-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.25rem 0;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.spec-item:last-child {
-  border-bottom: none;
-}
-
-.spec-label {
-  color: #6c757d;
-  font-weight: 500;
-}
-
-.spec-value {
-  font-weight: 600;
-  color: #212529;
-}
-
 .toast-container {
   position: fixed;
   top: 20px;
@@ -678,12 +652,6 @@ function closeToast(toastId) {
 
 .device-card {
   height: 100%; /* Make all cards same height */
-  display: flex;
-  flex-direction: column;
-}
-
-.device-card-body {
-  flex: 1 1 auto; /* Allow flexible height */
   display: flex;
   flex-direction: column;
 }
