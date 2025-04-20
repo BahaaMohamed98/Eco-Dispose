@@ -1,4 +1,3 @@
-<!--suppress CssUnusedSymbol -->
 <script setup>
 import { ref, computed } from "vue";
 import { deviceStore } from "@/store/deviceStore.js";
@@ -44,7 +43,7 @@ const filteredDevices = computed(() => {
 
 // Calculate total pages for pagination
 const totalPages = computed(() => {
-  const filteredCount = Object.values(deviceStore.devices).length;
+  const filteredCount = deviceStore.devices.size;
   return Math.ceil(filteredCount / itemsPerPage.value) || 1;
 });
 
@@ -123,6 +122,8 @@ function refreshDevices() {
     .refreshDevices()
     .then((response) => {
       if (response.ok) {
+        currentPage.value = 1;
+
         toastStore.showToast(
           "Data Refreshed",
           "Device data has been refreshed.",
@@ -421,35 +422,38 @@ function getConditionClass(condition) {
       </div>
 
       <!-- Pagination -->
-      <div class="pagination-wrapper mt-4" v-if="totalPages > 1">
+      <div class="mt-4">
         <nav aria-label="Page navigation">
           <ul class="pagination justify-content-center">
+            <!-- backwards button -->
             <li class="page-item" :class="{ disabled: currentPage === 1 }">
               <a
-                class="page-link"
-                href="#"
+                class="page-link rounded-3"
                 @click.prevent="changePage(currentPage - 1)"
               >
                 <i class="fas fa-chevron-left"></i>
               </a>
             </li>
+
+            <!-- pages -->
             <li
               v-for="page in totalPages"
               :key="page"
               class="page-item"
               :class="{ active: page === currentPage }"
             >
-              <a class="page-link" href="#" @click.prevent="changePage(page)">{{
-                page
-              }}</a>
+              <a class="page-link rounded-3" @click.prevent="changePage(page)">
+                {{ page }}
+              </a>
             </li>
+
+            <!-- forward button -->
             <li
               class="page-item"
               :class="{ disabled: currentPage === totalPages }"
             >
               <a
-                class="page-link"
-                href="#"
+                class="page-link rounded-3"
                 @click.prevent="changePage(currentPage + 1)"
               >
                 <i class="fas fa-chevron-right"></i>
@@ -528,44 +532,12 @@ function getConditionClass(condition) {
 }
 
 .page-link {
-  color: #4361ee;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 0.25rem;
   transition: all 0.2s ease;
 }
 
 .page-link:hover {
-  background-color: #4361ee;
-  color: #ffffff;
-}
-
-.page-item.active .page-link {
-  background-color: #4361ee;
-  border-color: #4361ee;
-}
-
-.btn-primary {
-  background-color: #4361ee;
-  border-color: #4361ee;
-  color: #ffffff;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #3a56d4;
-  border-color: #3a56d4;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
-}
-
-.btn-primary:disabled {
-  background-color: #a8b1ff;
-  border-color: #a8b1ff;
-  cursor: not-allowed;
+  background-color: var(--bs-primary);
+  color: var(--bs-white);
 }
 
 .empty-state {
@@ -583,12 +555,6 @@ function getConditionClass(condition) {
   .filter-bar {
     padding: 1rem;
   }
-}
-
-.device-card {
-  height: 100%; /* Make all cards same height */
-  display: flex;
-  flex-direction: column;
 }
 
 .user-description {
