@@ -29,19 +29,30 @@ frontend/
 
 ## Setup
 
+### Install dependencies
+
 ```bash
-# Install dependencies
 npm install
+```
 
-# Start development server
+This will install all the required dependencies listed in `package.json`.
+
+### Run development server
+
+```bash
 npm run dev
+```
 
-# Build for production
+This will start a local development server at `http://localhost:5000`.
+
+### Build for production
+
+```bash
 npm run build
-
-# Preview production build
 npm run preview
 ```
+
+This will create a production build in the `dist` directory and start a local server to preview it.
 
 ## Views
 
@@ -59,6 +70,7 @@ npm run preview
 
 - `Navbar`: Navigation bar with links to different pages
 - `Footer`: Footer with links and copyright
+- `ToastContainer`: Container for toast notifications
 
 ## Development Notes
 
