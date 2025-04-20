@@ -72,6 +72,13 @@ This will create a production build in the `dist` directory and start a local se
 - `Footer`: Footer with links and copyright
 - `ToastContainer`: Container for toast notifications
 
+## Stores
+
+- `userStore`: Manages user authentication and profile data
+- `deviceStore`: Manages device listings and submission status
+- `links`: Holds the links for the navbar and footer
+- `api`: Holds the API base URL
+
 ## Development Notes
 
 - API base URL is configured in [`jsconfig.json`](jsconfig.json).
