@@ -100,7 +100,7 @@ export const userStore = reactive({
       return api + this.currentUser.profileImageUrl;
     }
 
-    return "/Eco-Dispose/assets/placeholder.png";
+    return "/Eco-Dispose/assets/profilePlaceholder.png";
   },
 
   logout() {

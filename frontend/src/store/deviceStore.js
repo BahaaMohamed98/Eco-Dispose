@@ -62,7 +62,7 @@ export const deviceStore = reactive({
       return api + device.imageUrl;
     }
 
-    return "/Eco-Dispose/assets/devices/device.png";
+    return "/Eco-Dispose/assets/devicePlaceholder.png";
   },
 
   async updateDevice(deviceId, device) {
