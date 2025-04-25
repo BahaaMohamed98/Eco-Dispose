@@ -15,6 +15,14 @@ export const userStore = reactive({
   },
 
   async register(newUser) {
+    if (newUser.email.toLowerCase().endsWith("@eco-dispose.com")) {
+      toastStore.showToast(
+        "Invalid email",
+        "cannot register with an eco-dispose email",
+        "danger",
+      );
+      return { ok: false };
+    }
     const formData = new FormData();
 
     formData.append("firstName", newUser.firstName);

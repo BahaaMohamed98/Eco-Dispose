@@ -38,6 +38,11 @@ def register():
     if not first_name or not last_name or not email or not password:
         return jsonify({"message": "missing required fields"}), 400
 
+    if email.lower().endswith("@eco-dispose.com"):
+        return jsonify(
+            {"error": "invalid email: cannot register with an eco-dispose email"}
+        ), 409
+
     try:
         # Create and save the address first
         address = Address()
