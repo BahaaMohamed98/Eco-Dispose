@@ -81,22 +81,10 @@ const rejectOffer = (deviceId) => {
 };
 
 // Helper methods
-const getDeviceIcon = (deviceName) => {
-  return deviceName.toLowerCase().includes("macbook") ||
-    deviceName.toLowerCase().includes("laptop")
+const getDeviceIcon = (deviceType) => {
+  return deviceType.toLowerCase().includes("laptop")
     ? "fas fa-laptop"
     : "fas fa-mobile-alt";
-};
-
-const getStatusClass = (status) => {
-  const statusMap = {
-    waiting: "status-waiting",
-    collected: "status-collected",
-    evaluated: "status-evaluated",
-    accepted: "status-accepted",
-    rejected: "status-rejected",
-  };
-  return statusMap[status] || "";
 };
 
 const conditionBadgeClass = (condition) => {
@@ -219,7 +207,7 @@ onMounted(() => {
           >
             <div class="card-body d-flex align-items-center p-3">
               <div class="icon-wrapper">
-                <i :class="getDeviceIcon(device.name)" class="device-icon"></i>
+                <i :class="getDeviceIcon(device.type)" class="device-icon"></i>
               </div>
 
               <div class="flex-grow-1">
@@ -227,10 +215,7 @@ onMounted(() => {
                   class="d-flex justify-content-between align-items-center mb-2"
                 >
                   <h5 class="mb-0 fw-bold">{{ device.name }}</h5>
-                  <span
-                    class="device-status"
-                    :class="getStatusClass(device.status)"
-                  >
+                  <span class="device-status">
                     <i :class="getStatusIcon(device.status)" class="me-1"></i>
                     {{ getStatusText(device.status) }}
                   </span>
@@ -330,6 +315,11 @@ onMounted(() => {
               </div>
               <div class="text-center mb-3">
                 <span
+                  v-if="
+                    ['evaluated', 'accepted', 'rejected'].includes(
+                      selectedDevice.status,
+                    )
+                  "
                   class="badge rounded-pill px-3 py-2"
                   :class="conditionBadgeClass(selectedDevice.condition)"
                 >
@@ -355,15 +345,22 @@ onMounted(() => {
 
               <div class="bg-light rounded p-3 mb-4">
                 <div class="device-detail-item mb-3">
-                  <h6 class="fw-bold">User Description</h6>
+                  <h6 class="fw-bold">Device Type</h6>
                   <p class="detail-content">
-                    {{ selectedDevice.userDescription }}
+                    {{ selectedDevice.type }}
                   </p>
                 </div>
 
                 <div class="device-detail-item mb-3">
                   <h6 class="fw-bold">Known defects</h6>
                   <p class="detail-content">{{ selectedDevice.defects }}</p>
+                </div>
+
+                <div class="device-detail-item mb-3">
+                  <h6 class="fw-bold">User Description</h6>
+                  <p class="detail-content">
+                    {{ selectedDevice.userDescription }}
+                  </p>
                 </div>
 
                 <div class="device-detail-item border-bottom pb-3">
@@ -498,6 +495,7 @@ onMounted(() => {
             </p>
           </div>
         </div>
+
         <div class="modal-footer justify-content-center">
           <button
             type="button"
