@@ -90,7 +90,7 @@ export const deviceStore = reactive({
 
   async deleteDevice(deviceId) {
     try {
-      const response = fetch(`${api}/devices/${deviceId}`, {
+      const response = await fetch(`${api}/devices/${deviceId}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -99,9 +99,10 @@ export const deviceStore = reactive({
         throw "failed to delete device";
       }
 
-      // this.devices.delete(deviceId);
+      return { ok: true };
     } catch (e) {
       console.error(e);
+      return { ok: false };
     }
   },
 });

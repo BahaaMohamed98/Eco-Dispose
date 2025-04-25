@@ -38,14 +38,10 @@ const acceptOffer = (deviceId) => {
   if (modal) modal.hide();
 
   deviceStore
-    .updateDevice(deviceId, deviceStore.devices.get(deviceId))
+    .deleteDevice(deviceId)
     .then((response) => {
       if (!response.ok) {
-        toastStore.showToast(
-          "Failed",
-          "Failed to accept offer",
-          "danger",
-        );
+        toastStore.showToast("Failed", "Failed to accept offer", "danger");
         return;
       }
 
@@ -56,8 +52,6 @@ const acceptOffer = (deviceId) => {
       );
     })
     .catch((e) => console.error(e));
-
-  deviceStore.deleteDevice(deviceId);
 };
 
 // Reject offer functionality
@@ -73,11 +67,7 @@ const rejectOffer = (deviceId) => {
     .updateDevice(deviceId, deviceStore.devices.get(deviceId))
     .then((response) => {
       if (!response.ok) {
-        toastStore.showToast(
-          "Failed",
-          "Failed to reject offer",
-          "danger",
-        );
+        toastStore.showToast("Failed", "Failed to reject offer", "danger");
         return;
       }
 

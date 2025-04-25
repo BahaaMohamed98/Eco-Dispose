@@ -112,18 +112,22 @@ export const userStore = reactive({
     this.currentUser = null;
   },
 
+  // try to fetch the user profile
   async checkAuth() {
     this.isLoading = true;
 
+    // The server will return a 401 status code if the user is not authenticated,
+    // and the response will contain the user data if they are authenticated.
     try {
       const response = await fetch(`${api}/auth/profile`, {
         method: "GET",
-        credentials: "include",
+        credentials: "include", // include cookies
       });
 
+      // if the user is not logged in, the response will be 401
       if (!response.ok) {
         userStore.currentUser = null;
-        throw "not logged in";
+        throw "failed to fetch user";
       }
 
       const data = await response.json();
