@@ -8,7 +8,6 @@ const lastName = ref("");
 const email = ref("");
 const password = ref("");
 
-// TODO: handle registrtion errors
 function submitForm() {
   userStore
     .register({

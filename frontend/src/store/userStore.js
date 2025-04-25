@@ -1,6 +1,7 @@
 import { reactive } from "vue";
 import { api } from "@/store/api.js";
 import { deviceStore } from "@/store/deviceStore.js";
+import { toastStore } from "./toastStore";
 
 // reactive store
 export const userStore = reactive({
@@ -29,7 +30,13 @@ export const userStore = reactive({
       });
 
       if (!response.ok) {
-        console.error(response);
+        toastStore.showToast(
+          "Invalid email",
+          "email is already used",
+          "danger",
+        );
+
+        return { ok: false };
       }
 
       return this.login(newUser.email, newUser.password);
