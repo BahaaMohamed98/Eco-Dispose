@@ -48,6 +48,28 @@ source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+### Configure environment variables
+
+Copy `.env.example` to `.env` and set the required environment variables:
+
+```bash
+# Copy example environment file to .env
+cp .env.example .env # Windows: copy .env.example .env
+```
+
+Edit the `.env` file to set your environment variables:
+
+- `SECRET_KEY`: Secret key for session management and CSRF protection.
+- `SQLALCHEMY_DATABASE_URI`: Database connection for SQLite.
+
+Generate a secure random SECRET_KEY with:
+
+```bash
+python -c 'import secrets; print(secrets.token_hex())'
+```
+
+The application reads these configuration values for security and database connections.
+
 ### Run development server
 
 ```bash

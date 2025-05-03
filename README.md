@@ -28,6 +28,54 @@ Eco-Dispose/
 
 ## Quick Start
 
+### Backend Setup
+
+<details open>
+<summary>Linux/MacOS</summary>
+
+```bash
+# Navigate to the backend directory
+cd backend
+
+# Create and activate virtual environment
+python -m venv .venv
+source .venv/bin/activate
+
+# Install requirements
+pip install -r requirements.txt
+
+# Copy environment config and run server
+cp .env.example .env
+
+# Run the development server
+flask run
+```
+
+</details>
+
+<details>
+<summary>Windows</summary>
+
+```bash
+# Navigate to the backend directory
+cd backend
+
+# Create and activate virtual environment
+python -m venv .venv
+.venv\Scripts\activate
+
+# Install requirements
+pip install -r requirements.txt
+
+# Copy environment config and run server
+copy .env.example .env
+
+# Run the development server
+flask run
+```
+
+</details>
+
 ### Frontend Setup
 
 ```bash
@@ -40,23 +88,7 @@ npm install
 npm run build
 
 # Run the development server
-npm run preview
-```
-
-### Backend Setup
-
-```bash
-cd backend
-
-# Create a virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Install the requirements
-pip install -r requirements.txt
-
-# run the server
-flask run
+npm run preview -- --open
 ```
 
 ## Documentation
@@ -69,4 +101,3 @@ flask run
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-

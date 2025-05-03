@@ -40,7 +40,7 @@ This will install all the required dependencies listed in `package.json`.
 ### Run development server
 
 ```bash
-npm run dev
+npm run dev -- --open
 ```
 
 This will start a local development server at `http://localhost:5000`.
@@ -49,7 +49,7 @@ This will start a local development server at `http://localhost:5000`.
 
 ```bash
 npm run build
-npm run preview
+npm run preview -- --open
 ```
 
 This will create a production build in the `dist` directory and start a local server to preview it.
