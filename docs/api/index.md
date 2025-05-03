@@ -36,7 +36,7 @@ See the [Authentication API](auth.md) for more details on login and registration
 
 Entity-relationship diagram for the system:
 
-![Database ERD](docs/diagrams/erd.png)
+![Database ERD](/docs/diagrams/erd.png)
 
 ## Response Format
 
