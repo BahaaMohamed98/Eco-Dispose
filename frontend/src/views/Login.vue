@@ -19,7 +19,7 @@ function submitForm() {
       if (userStore.currentUser.isAdmin) {
         router.push({ path: "/admin" });
       } else {
-        router.push({ path: "/profile" });
+        router.push({ path: "/list" });
       }
     })
     .catch((e) => console.error(e));
