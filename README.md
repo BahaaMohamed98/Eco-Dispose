@@ -64,6 +64,7 @@ flask run
 - [API Documentation](docs/api/index.md)
 - [Frontend Documentation](frontend/README.md)
 - [Backend Documentation](backend/README.md)
+- [System Documentation & Diagrams](docs/index.md)
 
 ## License
 

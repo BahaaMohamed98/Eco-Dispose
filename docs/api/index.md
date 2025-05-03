@@ -36,7 +36,7 @@ See the [Authentication API](auth.md) for more details on login and registration
 
 Entity-relationship diagram for the system:
 
-![Database ERD](/docs/diagrams/erd.png)
+![Database ERD](docs/diagrams/erd.png)
 
 ## Response Format
 
@@ -89,16 +89,16 @@ Example:
 
 The API uses conventional HTTP response codes to indicate success or failure:
 
-| Status Code | Meaning      | Description                                                       |
-| ----------- | ------------ | ----------------------------------------------------------------- |
-| 200         | OK           | Request was successful                                            |
-| 201         | Created      | Resource created successfully                                     |
-| 400         | Bad Request  | Missing or invalid parameters                                     |
-| 401         | Unauthorized | Authentication required                                           |
-| 403         | Forbidden    | User lacks permission for the requested operation                 |
-| 404         | Not Found    | Resource not found                                                |
-| 409         | Conflict     | Request conflicts with current state (e.g., email already in use) |
-| 500         | Server Error | Unexpected server error                                           |
+| Status Code | Meaning      | Description                          |
+| ----------- | ------------ | ------------------------------------ |
+| 200         | OK           | Request was successful               |
+| 201         | Created      | Resource created successfully        |
+| 400         | Bad Request  | Missing or invalid parameters        |
+| 401         | Unauthorized | Authentication required              |
+| 403         | Forbidden    | Permission denied                    |
+| 404         | Not Found    | Resource not found                   |
+| 409         | Conflict     | Request conflicts with current state |
+| 500         | Server Error | Unexpected server error              |
 
 ## Security Considerations
 
@@ -119,4 +119,3 @@ The API uses conventional HTTP response codes to indicate success or failure:
 For production use, CSRF protection is implemented to prevent cross-site request forgery attacks.
 
 ---
-
