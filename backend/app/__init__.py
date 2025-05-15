@@ -21,14 +21,18 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
-    app.config["SESSION_COOKIE_SECURE"] = False
+    app.config["SESSION_COOKIE_SAMESITE"] = "None"
+    app.config["SESSION_COOKIE_SECURE"] = True
     app.config["SESSION_COOKIE_HTTPONLY"] = True
     db.init_app(app)
 
     CORS(
         app,
-        origins=["http://localhost:3000", "http://localhost:8080"],
+        origins=[
+            "http://localhost:3000",
+            "http://localhost:8080",
+            "https://bahaamohamed98.github.io/Eco-Dispose",
+        ],
         supports_credentials=True,
     )
 
