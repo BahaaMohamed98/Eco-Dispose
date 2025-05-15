@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import { userStore } from "@/store/userStore.js";
+import router from "@/router/routes";
 
 const address = computed(() => {
   const userAddress = userStore.currentUser?.address;
@@ -65,7 +66,12 @@ const address = computed(() => {
               <span>Admin</span>
             </div>
           </div>
-          <button class="edit-details-btn">Edit Details</button>
+          <button
+            class="edit-details-btn"
+            @click="router.push('/profile/edit')"
+          >
+            Edit Details
+          </button>
         </div>
         <div class="navigation">
           <div class="nav-item active">Profile</div>
