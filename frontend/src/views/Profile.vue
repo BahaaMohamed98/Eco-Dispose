@@ -74,7 +74,9 @@ const address = computed(() => {
 
       <!-- Middle column - Main content -->
       <div class="main-content">
-        <div class="profile-header">
+        <div
+          class="profile-header d-flex justify-content-between align-items-center"
+        >
           <h1 class="profile-title">Profile</h1>
           <router-link to="/profile/edit" class="edit-profile-btn">
             <span class="pencil-icon">🖊️</span>
@@ -366,6 +368,32 @@ body {
   .navigation {
     width: 100%;
     flex: none;
+  }
+}
+
+@media (max-width: 992px) {
+  .top-section {
+    flex-direction: column;
+  }
+
+  .left,
+  .main-content,
+  .navigation {
+    width: 100%;
+  }
+
+  .profile-header,
+  .overview-section {
+    padding: 20px;
+  }
+
+  .edit-profile-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .profile-fields {
+    grid-template-columns: 1fr;
   }
 }
 </style>
